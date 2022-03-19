@@ -1,4 +1,4 @@
-import { Cell, Size, Status, Coordinate } from './types';
+import { CellMap, Size, Status, Coordinate, GameInfo } from './types';
 
 export const getOutsideBorderError = (c: Coordinate) =>
   Error(`Coordinate (${c[0]}, ${c[1]}) is outside border.`);
@@ -18,7 +18,7 @@ export const getHasBeenRevealedError = (c: Coordinate) =>
 export const getGameHasEndedError = () => Error('The game has ended.');
 
 class Minesweeper {
-  private cellMap: Cell[][] = [];
+  private cellMap: CellMap = [];
 
   private mineCount: number = 0;
 
@@ -49,12 +49,12 @@ class Minesweeper {
     return x < 0 || x >= this.size.width || y < 0 || y >= this.size.height;
   }
 
-  getStatus(): Status {
-    return this.status;
-  }
-
-  getCellMap(): Cell[][] {
-    return this.cellMap;
+  getGameInfo(): GameInfo {
+    return {
+      map: JSON.parse(JSON.stringify(this.cellMap)),
+      size: this.size,
+      status: this.status,
+    };
   }
 
   reset() {
@@ -65,6 +65,7 @@ class Minesweeper {
       this.cellMap[x] = [];
       for (let y = 0; y < this.size.height; y += 1) {
         this.cellMap[x][y] = {
+          key: `${x},${y}`,
           hasMine: false,
           adjacentMines: 0,
           revealed: false,
@@ -190,3 +191,4 @@ class Minesweeper {
 }
 
 export default Minesweeper;
+export type { GameInfo, Coordinate, CellMap };

@@ -6,11 +6,14 @@
  * @field boomed boolean Have you revealed this cell when it has a mine?
  */
 export type Cell = {
+  key: string;
   hasMine: boolean;
   adjacentMines: number;
   revealed: boolean;
   boomed: boolean;
 };
+
+export type CellMap = Cell[][];
 
 export type Size = {
   width: number;
@@ -20,3 +23,9 @@ export type Size = {
 export type Status = 'WAITING' | 'STARTED' | 'SUCCEEDED' | 'FAILED';
 
 export type Coordinate = [number, number];
+
+export type GameInfo = {
+  map: CellMap;
+  size: Size;
+  status: Status;
+};

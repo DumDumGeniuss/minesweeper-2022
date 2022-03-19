@@ -1,6 +1,6 @@
-import { Cell, Coordinate } from './types';
+import { CellMap, Coordinate } from './types';
 
-export function getMineCount(cellMap: Cell[][]) {
+export function getMineCount(cellMap: CellMap) {
   let count = 0;
   for (let i = 0; i < cellMap.length; i += 1) {
     for (let j = 0; j < cellMap[i].length; j += 1) {
@@ -13,7 +13,7 @@ export function getMineCount(cellMap: Cell[][]) {
 }
 
 export function getCoordOfFirstMatchedCell(
-  cellMap: Cell[][],
+  cellMap: CellMap,
   options: {
     hasMine?: boolean;
     revealed?: boolean;
