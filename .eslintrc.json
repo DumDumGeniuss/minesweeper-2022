@@ -11,6 +11,7 @@
   "rules": {
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
+    "no-new": "off",
     "import/extensions": "off",
     "default-param-last": "off",
     "@typescript-eslint/default-param-last": "off",
