@@ -10,7 +10,7 @@ function UnrevealedCell({ coord, onClick }: UnrevealedCellProps) {
     <button
       className="flex justify-center items-center w-full h-full bg-gray-300"
       type="button"
-      aria-label="Click cell"
+      aria-label="Reveal cell"
       onClick={() => {
         onClick(coord);
       }}

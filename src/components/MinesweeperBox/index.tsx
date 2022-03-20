@@ -9,8 +9,7 @@ type Props = {
   minesCount: number;
 };
 
-const MinesweeperBox = function MinesweeperBox(props: Props) {
-  const { size, minesCount } = props;
+const MinesweeperBox = function MinesweeperBox({ size, minesCount }: Props) {
   const [minesweeper, setMinesweeper] = useState<Minesweeper | null>(null);
   const [progress, setProgress] = useState<Progress>({
     cellMap: [],
@@ -27,7 +26,7 @@ const MinesweeperBox = function MinesweeperBox(props: Props) {
 
     const progressUpdater = setInterval(() => {
       setProgress(ms.getProgress());
-    });
+    }, 1000);
 
     return () => {
       ms.destroy();

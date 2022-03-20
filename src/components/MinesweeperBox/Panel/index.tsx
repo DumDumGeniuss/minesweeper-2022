@@ -1,6 +1,6 @@
 import { Status } from '@/lib/minesweeper';
 
-type Props = {
+export type Props = {
   status: Status;
   minesCount: number;
   duration: number;

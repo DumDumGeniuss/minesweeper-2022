@@ -1,5 +1,5 @@
 import { CellMap, Coordinate } from '@/lib/minesweeper';
-import Cell from './Cell';
+import Cell from '../Cell';
 
 type Props = {
   cellMap: CellMap;
@@ -8,7 +8,7 @@ type Props = {
 
 const CellsMap = function CellsMap({ cellMap, onCellClick }: Props) {
   return (
-    <section className="flex flex-col border-[1px] border-[#313131]">
+    <section className="flex flex-col border-[1px] border-black">
       {cellMap.map((cells, x) => (
         <section
           key={cells[0].key}
