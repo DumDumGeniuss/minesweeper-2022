@@ -1,6 +1,6 @@
 import { CellMap, Coordinate } from './types';
 
-export function getMineCount(cellMap: CellMap) {
+export function getMinesCount(cellMap: CellMap) {
   let count = 0;
   for (let i = 0; i < cellMap.length; i += 1) {
     for (let j = 0; j < cellMap[i].length; j += 1) {
