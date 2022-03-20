@@ -1,14 +1,14 @@
 type Props = {
   panel: JSX.Element;
-  cellMap: JSX.Element;
+  gameField: JSX.Element;
 };
 
-function Wrapper({ panel, cellMap }: Props) {
+function Wrapper({ panel, gameField }: Props) {
   return (
-    <section className="inline-flex border-[1px] border-black p-2 bg-white">
+    <section className="inline-flex p-4 rounded-xl bg-white">
       <section className="inline-flex flex-col">
         <section className="flex-grow">{panel}</section>
-        <section className="mt-2">{cellMap}</section>
+        <section className="mt-2">{gameField}</section>
       </section>
     </section>
   );

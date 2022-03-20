@@ -25,25 +25,23 @@ const Panel = function Panel({
   }
 
   return (
-    <section className="flex flex-col border-[1px] border-black bg-gray-200">
-      <section className="flex items-center justify-between p-[10px]">
-        <section className="flex justify-between items-center w-16 h-10 border-[1px] border-black bg-slate-100 px-2">
-          <section>💣</section>
-          <section>{minesCount.toString(10)}</section>
-        </section>
-        <button
-          className="w-[40px] h-10 flex items-center justify-center rounded-lg bg-white"
-          type="button"
-          aria-label="Reset game"
-          onClick={onResetClick}
-          onKeyDown={onResetClick}
-        >
-          <section className="text-2xl">{emoji}</section>
-        </button>
-        <section className="flex justify-between items-center w-16 h-10 border-[1px] border-black bg-slate-100 px-2">
-          <section>⏰</section>
-          <section>{duration}</section>
-        </section>
+    <section className="flex items-center justify-between h-16 rounded-xl">
+      <section className="flex justify-between items-center w-28 h-10 rounded-lg bg-slate-200 px-4">
+        <section>💣</section>
+        <section>{minesCount.toString(10)}</section>
+      </section>
+      <button
+        className="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-100 drop-shadow-md hover:drop-shadow-none"
+        type="button"
+        aria-label="Reset game"
+        onClick={onResetClick}
+        onKeyDown={onResetClick}
+      >
+        <section className="text-2xl">{emoji}</section>
+      </button>
+      <section className="flex justify-between items-center w-28 h-10 rounded-lg bg-slate-200 px-4">
+        <section>⏰</section>
+        <section>{duration}</section>
       </section>
     </section>
   );

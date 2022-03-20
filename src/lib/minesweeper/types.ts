@@ -13,7 +13,7 @@ export type Cell = {
   boomed: boolean;
 };
 
-export type CellMap = Cell[][];
+export type CellsMap = Cell[][];
 
 export type Size = {
   width: number;
@@ -25,7 +25,7 @@ export type Status = 'SLEEPING' | 'STARTED' | 'SUCCEEDED' | 'FAILED';
 export type Coordinate = [number, number];
 
 export type Progress = {
-  cellMap: CellMap;
+  cellsMap: CellsMap;
   status: Status;
   minesCount: number;
   size: Size;

@@ -8,7 +8,7 @@ type UnrevealedCellProps = {
 function UnrevealedCell({ coord, onClick }: UnrevealedCellProps) {
   return (
     <button
-      className="flex justify-center items-center w-full h-full bg-gray-300"
+      className="flex justify-center items-center w-full h-full bg-white"
       type="button"
       aria-label="Reveal cell"
       onClick={() => {
@@ -92,7 +92,7 @@ const Cell = function Cell({
   }
 
   return (
-    <section className="w-full h-full border-[1px] border-[#e5e7eb]">
+    <section className="w-full h-full rounded-lg overflow-hidden">
       {cellComponent}
     </section>
   );

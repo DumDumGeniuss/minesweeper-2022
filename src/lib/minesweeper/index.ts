@@ -1,4 +1,4 @@
-import { CellMap, Size, Status, Coordinate, Progress } from './types';
+import { CellsMap, Size, Status, Coordinate, Progress } from './types';
 
 export const getOutsideBorderError = (c: Coordinate) =>
   Error(`Coordinate (${c[0]}, ${c[1]}) is outside border.`);
@@ -7,7 +7,7 @@ export const getIncorrectSizeError = () =>
   Error('Either width or height cannot be less than 0.');
 
 export const getTooManyMinesError = () =>
-  Error('Mine count must be less than number of total cells in cellMap.');
+  Error('Mine count must be less than number of total cells in cellsMap.');
 
 export const getIncorrectMinesCountError = () =>
   Error('The mine count cannot be less than 1.');
@@ -18,7 +18,7 @@ export const getHasBeenRevealedError = (c: Coordinate) =>
 export const getGameHasEndedError = () => Error('The game has ended.');
 
 class Minesweeper {
-  private cellMap: CellMap = [];
+  private cellsMap: CellsMap = [];
 
   private minesCount: number = 0;
 
@@ -102,7 +102,7 @@ class Minesweeper {
    */
   getProgress(): Progress {
     return {
-      cellMap: this.cellMap,
+      cellsMap: [...this.cellsMap],
       status: this.status,
       minesCount: this.minesCount,
       size: this.size,
@@ -118,11 +118,11 @@ class Minesweeper {
     this.revealedCellCount = 0;
     this.sleep();
 
-    this.cellMap = [];
+    this.cellsMap = [];
     for (let x = 0; x < this.size.width; x += 1) {
-      this.cellMap[x] = [];
+      this.cellsMap[x] = [];
       for (let y = 0; y < this.size.height; y += 1) {
-        this.cellMap[x][y] = {
+        this.cellsMap[x][y] = {
           key: `${x},${y}`,
           hasMine: false,
           adjMinesCount: 0,
@@ -141,7 +141,7 @@ class Minesweeper {
    */
   private revealCellWithMines(c: Coordinate) {
     const [x, y] = c;
-    this.cellMap[x][y].boomed = true;
+    this.cellsMap[x][y].boomed = true;
     this.setAllCellsRevealed();
     this.fail();
   }
@@ -164,10 +164,10 @@ class Minesweeper {
       if (!visitedMap[coordKey]) {
         visitedMap[coordKey] = true;
 
-        if (!this.cellMap[x][y].hasMine && !this.cellMap[x][y].revealed) {
+        if (!this.cellsMap[x][y].hasMine && !this.cellsMap[x][y].revealed) {
           this.setCellRevealed([x, y]);
 
-          if (this.cellMap[x][y].adjMinesCount === 0) {
+          if (this.cellsMap[x][y].adjMinesCount === 0) {
             for (let i = x - 1; i <= x + 1; i += 1) {
               for (let j = y - 1; j <= y + 1; j += 1) {
                 const isCenterCoord = i === x && j === y;
@@ -200,11 +200,11 @@ class Minesweeper {
     if (this.isOutsideBorder(c)) {
       throw getOutsideBorderError(c);
     }
-    if (this.cellMap[x][y].revealed) {
+    if (this.cellsMap[x][y].revealed) {
       throw getHasBeenRevealedError(c);
     }
 
-    if (this.cellMap[x][y].hasMine) {
+    if (this.cellsMap[x][y].hasMine) {
       this.revealCellWithMines(c);
     } else if (this.status === 'SLEEPING') {
       this.plantMines(c);
@@ -223,14 +223,14 @@ class Minesweeper {
    */
   private plantMine(c: Coordinate) {
     const [x, y] = c;
-    this.cellMap[x][y].hasMine = true;
+    this.cellsMap[x][y].hasMine = true;
 
     // Update adjacent mine count
     for (let i = x - 1; i <= x + 1; i += 1) {
       for (let j = y - 1; j <= y + 1; j += 1) {
         const isMineCoord = i === x && j === y;
         if (!isMineCoord && !this.isOutsideBorder([i, j])) {
-          this.cellMap[i][j].adjMinesCount += 1;
+          this.cellsMap[i][j].adjMinesCount += 1;
         }
       }
     }
@@ -246,7 +246,7 @@ class Minesweeper {
     while (plantedMinesCount < this.minesCount) {
       const x: number = Math.floor(Math.random() * this.size.width);
       const y: number = Math.floor(Math.random() * this.size.height);
-      const { hasMine, revealed } = this.cellMap[x][y];
+      const { hasMine, revealed } = this.cellsMap[x][y];
       const isExcludedCoord = x === excludedX && y === excludedY;
       if (!isExcludedCoord && !hasMine && !revealed) {
         this.plantMine([x, y]);
@@ -260,7 +260,7 @@ class Minesweeper {
    */
   private setCellRevealed(c: Coordinate) {
     const [x, y] = c;
-    this.cellMap[x][y].revealed = true;
+    this.cellsMap[x][y].revealed = true;
     this.revealedCellCount += 1;
   }
 
@@ -283,4 +283,4 @@ class Minesweeper {
 }
 
 export default Minesweeper;
-export type { Progress, Coordinate, CellMap, Status };
+export type { Progress, Coordinate, CellsMap, Status };

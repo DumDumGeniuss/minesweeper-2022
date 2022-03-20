@@ -14,13 +14,13 @@ describe('Minesweeper', () => {
     it('Should create new instance with all unrevealed cells.', () => {
       const game = new Minesweeper({ width: 2, height: 2 }, 1);
       const progress: Progress = game.revealCell([0, 0]);
-      const minesCount = getMinesCount(progress.cellMap);
+      const minesCount = getMinesCount(progress.cellsMap);
       expect(minesCount).toEqual(1);
     });
     it('Should have no mines on initail map.', () => {
       const game = new Minesweeper({ width: 2, height: 2 }, 1);
       const progress = game.getProgress();
-      const minesCount = getMinesCount(progress.cellMap);
+      const minesCount = getMinesCount(progress.cellsMap);
       expect(minesCount).toBe(0);
     });
     it('Should throw error when initializing with incorrect size.', () => {
@@ -55,7 +55,7 @@ describe('Minesweeper', () => {
       let progress: Progress = game.revealCell([0, 0]);
       // Reset game
       progress = game.reset();
-      const minesCount = getMinesCount(progress.cellMap);
+      const minesCount = getMinesCount(progress.cellsMap);
 
       expect(minesCount).toBe(0);
     });
@@ -64,7 +64,7 @@ describe('Minesweeper', () => {
     it('Should plant mimnes when first time cliking a cell.', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 5);
       const progress: Progress = game.revealCell([0, 0]);
-      const minesCount = getMinesCount(progress.cellMap);
+      const minesCount = getMinesCount(progress.cellsMap);
       expect(minesCount).toBe(5);
     });
     it('Should throw error when coordinate is outside border.', () => {
@@ -91,7 +91,7 @@ describe('Minesweeper', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 1);
       const c: Coordinate = [0, 0];
       const progress: Progress = game.revealCell(c);
-      const coord: Coordinate = getCoordOfFirstMatchedCell(progress.cellMap, {
+      const coord: Coordinate = getCoordOfFirstMatchedCell(progress.cellsMap, {
         hasMine: true,
         revealed: false,
       });
@@ -106,19 +106,19 @@ describe('Minesweeper', () => {
     it('Should reveal the cell at the coordinate.', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 5);
       let progress: Progress = game.getProgress();
-      const coord: Coordinate = getCoordOfFirstMatchedCell(progress.cellMap, {
+      const coord: Coordinate = getCoordOfFirstMatchedCell(progress.cellsMap, {
         hasMine: false,
         revealed: false,
       });
       progress = game.revealCell(coord);
       const [x, y] = coord;
 
-      expect(progress.cellMap[x][y].revealed).toBe(true);
+      expect(progress.cellsMap[x][y].revealed).toBe(true);
     });
     it('Should end game when clicking a bomb.', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 4);
       let progress: Progress = game.revealCell([0, 0]);
-      const coord = getCoordOfFirstMatchedCell(game.getProgress().cellMap, {
+      const coord = getCoordOfFirstMatchedCell(game.getProgress().cellsMap, {
         hasMine: true,
         revealed: false,
       });
@@ -126,7 +126,7 @@ describe('Minesweeper', () => {
       const [x, y] = coord;
 
       expect(progress.status).toBe('FAILED');
-      expect(progress.cellMap[x][y].boomed).toBe(true);
+      expect(progress.cellsMap[x][y].boomed).toBe(true);
     });
     it('Should set status to "SUCCEED" when all cells without mines have been revealed.', () => {
       const game = new Minesweeper({ width: 2, height: 1 }, 1);
