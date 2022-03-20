@@ -57,3 +57,11 @@ game.revealCell([5, 5]);
 // Reveal cell at (7, 7), let's assume this cell has mines, so the mission will fail and all cells will be revealed.
 game.revealCell([7, 7]);
 ```
+
+## Minesweeper.destroy()
+
+```typescript
+destroy();
+```
+
+Clear all timers.

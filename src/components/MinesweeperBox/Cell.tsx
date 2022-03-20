@@ -8,7 +8,7 @@ type UnrevealedCellProps = {
 function UnrevealedCell({ coord, onClick }: UnrevealedCellProps) {
   return (
     <button
-      className="inline-flex bg-lime-200 w-full h-full shadow-sm"
+      className="flex w-full h-full"
       type="button"
       aria-label="Click cell"
       onClick={() => {
@@ -17,7 +17,9 @@ function UnrevealedCell({ coord, onClick }: UnrevealedCellProps) {
       onKeyDown={() => {
         onClick(coord);
       }}
-    />
+    >
+      🌱
+    </button>
   );
 }
 
@@ -27,8 +29,8 @@ type MineCellPoprs = {
 
 function MineCell({ boomed }: MineCellPoprs) {
   return (
-    <section className="inline-flex w-full h-full justify-center items-center">
-      <span>{boomed ? '💥' : '💣'}</span>
+    <section className="flex w-full h-full justify-center items-center">
+      <section>{boomed ? '💥' : '💣'}</section>
     </section>
   );
 }
@@ -39,8 +41,8 @@ type NormalCellProps = {
 
 function NormalCell({ adjMinesCount }: NormalCellProps) {
   return (
-    <section className="inline-flex w-full h-full justify-center items-center">
-      <span>{adjMinesCount}</span>
+    <section className="flex w-full h-full justify-center items-center">
+      <section>{adjMinesCount}</section>
     </section>
   );
 }
@@ -72,9 +74,7 @@ const Cell = function Cell({
     cellComponent = <NormalCell adjMinesCount={adjMinesCount} />;
   }
 
-  return (
-    <section className="inline-flex w-full h-full">{cellComponent}</section>
-  );
+  return <section className="w-full h-full">{cellComponent}</section>;
 };
 
 export default Cell;

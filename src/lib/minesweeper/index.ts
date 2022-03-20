@@ -28,6 +28,10 @@ class Minesweeper {
 
   private status: Status = 'SLEEPING';
 
+  private counter: NodeJS.Timer | null = null;
+
+  private duration: number = 0;
+
   constructor(size: Size, minesCount: number) {
     this.size = size;
     this.minesCount = minesCount;
@@ -64,6 +68,34 @@ class Minesweeper {
     return this.size.width * this.size.height;
   }
 
+  private start() {
+    this.status = 'STARTED';
+    this.counter = setInterval(() => {
+      this.duration += 1;
+    }, 1000);
+  }
+
+  private fail() {
+    this.status = 'FAILED';
+    if (this.counter) {
+      clearInterval(this.counter);
+    }
+  }
+
+  private succeed() {
+    this.status = 'SUCCEEDED';
+    if (this.counter) {
+      clearInterval(this.counter);
+    }
+  }
+
+  private sleep() {
+    this.status = 'SLEEPING';
+    if (this.counter) {
+      clearInterval(this.counter);
+    }
+  }
+
   /**
    * Get game information.
    * @returns Progress
@@ -72,6 +104,9 @@ class Minesweeper {
     return {
       cellMap: this.cellMap,
       status: this.status,
+      minesCount: this.minesCount,
+      size: this.size,
+      duration: this.duration,
     };
   }
 
@@ -79,8 +114,9 @@ class Minesweeper {
    * Reset game.
    */
   reset(): Progress {
+    this.duration = 0;
     this.revealedCellCount = 0;
-    this.status = 'SLEEPING';
+    this.sleep();
 
     this.cellMap = [];
     for (let x = 0; x < this.size.width; x += 1) {
@@ -105,9 +141,9 @@ class Minesweeper {
    */
   private revealCellWithMines(c: Coordinate) {
     const [x, y] = c;
-    this.status = 'FAILED';
     this.cellMap[x][y].boomed = true;
     this.setAllCellsRevealed();
+    this.fail();
   }
 
   /**
@@ -147,7 +183,7 @@ class Minesweeper {
 
     // If all cells without mines have been revealed.
     if (this.revealedCellCount + this.minesCount === this.getArea()) {
-      this.status = 'SUCCEEDED';
+      this.succeed();
       this.setAllCellsRevealed();
     }
   }
@@ -172,7 +208,7 @@ class Minesweeper {
       this.revealCellWithMines(c);
     } else if (this.status === 'SLEEPING') {
       this.plantMines(c);
-      this.status = 'STARTED';
+      this.start();
       this.revealCellWithoutMines(c);
     } else {
       this.revealCellWithoutMines(c);
@@ -236,6 +272,12 @@ class Minesweeper {
       for (let y = 0; y < this.size.height; y += 1) {
         this.setCellRevealed([x, y]);
       }
+    }
+  }
+
+  destroy() {
+    if (this.counter) {
+      clearInterval(this.counter);
     }
   }
 }

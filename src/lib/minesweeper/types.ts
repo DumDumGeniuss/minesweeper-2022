@@ -27,4 +27,7 @@ export type Coordinate = [number, number];
 export type Progress = {
   cellMap: CellMap;
   status: Status;
+  minesCount: number;
+  size: Size;
+  duration: number;
 };
