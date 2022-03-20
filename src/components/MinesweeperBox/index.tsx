@@ -43,15 +43,19 @@ const MinesweeperBox = function MinesweeperBox({ size, minesCount }: Props) {
   }, []);
 
   useEffect(() => {
-    const ms = new Minesweeper(size, minesCount, onDurationChange);
-    setMinesweeper(ms);
-    const progress = ms.getProgress();
+    const newMs = new Minesweeper(size, minesCount, onDurationChange);
+    setMinesweeper(newMs);
+    const progress = newMs.getProgress();
     setCellsMap(progress.cellsMap);
     setStatus(progress.status);
     setDuration(progress.duration);
-  }, [size, minesCount]);
 
-  useEffect(() => {}, [minesweeper]);
+    return () => {
+      if (minesweeper) {
+        minesweeper.destroy();
+      }
+    };
+  }, [size, minesCount]);
 
   return (
     <Wrapper
