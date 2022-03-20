@@ -1,4 +1,11 @@
-import { CellsMap, Size, Status, Coordinate, Progress } from './types';
+import {
+  CellsMap,
+  Size,
+  Status,
+  Coordinate,
+  Progress,
+  OnDurationChange,
+} from './types';
 
 export const getOutsideBorderError = (c: Coordinate) =>
   Error(`Coordinate (${c[0]}, ${c[1]}) is outside border.`);
@@ -32,9 +39,16 @@ class Minesweeper {
 
   private duration: number = 0;
 
-  constructor(size: Size, minesCount: number) {
+  private onDurationChange: OnDurationChange | null = null;
+
+  constructor(
+    size: Size,
+    minesCount: number,
+    onDurationChange: OnDurationChange | null
+  ) {
     this.size = size;
     this.minesCount = minesCount;
+    this.onDurationChange = onDurationChange;
 
     if (this.size.width < 0 || this.size.height < 0) {
       throw getIncorrectSizeError();
@@ -72,6 +86,9 @@ class Minesweeper {
     this.status = 'STARTED';
     this.counter = setInterval(() => {
       this.duration += 1;
+      if (this.onDurationChange) {
+        this.onDurationChange(this.duration);
+      }
     }, 1000);
   }
 
@@ -123,11 +140,11 @@ class Minesweeper {
       this.cellsMap[x] = [];
       for (let y = 0; y < this.size.height; y += 1) {
         this.cellsMap[x][y] = {
-          key: `${x},${y}`,
           hasMine: false,
           adjMinesCount: 0,
           revealed: false,
           boomed: false,
+          coord: [x, y],
         };
       }
     }

@@ -20,6 +20,8 @@ We have two main modules that build the entire Minesweeper game:
 
 This is a **"class"** that encapsulates everything you need in a Minesweeper game, with its simple API, you as a user are allowed to focus on building UI without bothering with complex logic of the game.
 
+Check here for details [Minesweeper Class](https://github.com/DumDumGeniuss/minesweeper-2022/blob/main/src/lib/minesweeper/README.md).
+
 ### 2. MinesweeperBox
 
 This is a React component in charge of rending the UI for users to interact with a Minesweeper game, with the help of Minesweeper class, this component was built with super low complexity thanks to Minesweeper class :).

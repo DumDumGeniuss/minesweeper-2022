@@ -6,11 +6,11 @@
  * @field boomed boolean Have you revealed this cell when it has a mine?
  */
 export type Cell = {
-  key: string;
   hasMine: boolean;
   adjMinesCount: number;
   revealed: boolean;
   boomed: boolean;
+  coord: Coordinate;
 };
 
 export type CellsMap = Cell[][];
@@ -31,3 +31,5 @@ export type Progress = {
   size: Size;
   duration: number;
 };
+
+export type OnDurationChange = (duration: number) => any;

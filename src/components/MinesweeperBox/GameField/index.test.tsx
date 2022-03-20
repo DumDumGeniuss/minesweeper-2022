@@ -16,18 +16,18 @@ describe('CellsMap', () => {
     const cellsMap: CellsMap = [
       [
         {
-          key: '0,0',
           hasMine: false,
           adjMinesCount: 1,
           revealed: false,
           boomed: false,
+          coord: [0, 0],
         },
         {
-          key: '0,1',
           hasMine: true,
           adjMinesCount: 0,
           revealed: false,
           boomed: false,
+          coord: [0, 1],
         },
       ],
     ];

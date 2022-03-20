@@ -5,14 +5,20 @@ Minesweeper is a class that manages everything in a Minesweeper game in terms of
 ## new Minesweeper()
 
 ```typescript
-new Minesweeper(size: Size, minesCount: number)
+new Minesweeper(size: Size, minesCount: number, onDurationChange: (duration: number) => any)
 ```
 
 Build a new Minesweeper game with given size and mines count.
 
 ```typescript
-// Start a new game with size of (10 x 10) and 10 mines.
-const game = new Minesweeper({ width: 10, height: 10 }, 10);
+// Start a new game with size of (10 x 10) and 10 mines, and log the current duration.
+const game = new Minesweeper(
+  { width: 10, height: 10 },
+  10,
+  (duration: number) => {
+    console.log(duration.)
+  },
+);
 ```
 
 ## Minesweeper.reset()
@@ -46,7 +52,7 @@ Reveal the cell at the given coordiante and return updated game progress, it has
 3. If you reveal a cell for the very first time, we randomly plant mines of the given count and do step 2.
 
 ```typescript
-const game = new Minesweeper({ width: 10, height: 10 }, 10);
+const game = new Minesweeper({ width: 10, height: 10 }, 10, null);
 
 // Reveal cell at (0, 0), this will plant mines and start the game.
 game.revealCell([0, 0]);
