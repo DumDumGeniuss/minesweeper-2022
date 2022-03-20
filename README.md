@@ -12,6 +12,10 @@ The app is deployed here:
 
 [https://minesweeper-2022-dumdumgenius.vercel.app/](https://minesweeper-2022-dumdumgenius.vercel.app/)
 
+## TODO
+
+RWD is not yet supported, we will be working on it soon.
+
 ## Infrastructure
 
 We have two main modules that build the entire Minesweeper game:

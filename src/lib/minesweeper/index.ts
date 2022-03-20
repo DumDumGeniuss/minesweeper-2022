@@ -132,6 +132,9 @@ class Minesweeper {
    */
   reset(): Progress {
     this.duration = 0;
+    if (this.onDurationChange) {
+      this.onDurationChange(this.duration);
+    }
     this.revealedCellCount = 0;
     this.sleep();
 

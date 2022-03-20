@@ -8,10 +8,10 @@ Minesweeper is a class that manages everything in a Minesweeper game in terms of
 new Minesweeper(size: Size, minesCount: number, onDurationChange: (duration: number) => any)
 ```
 
-Build a new Minesweeper game with given size and mines count.
+Build a new Minesweeper game with given size and mines count, you can also subscribe to duration change.
 
 ```typescript
-// Start a new game with size of (10 x 10) and 10 mines, and log the current duration.
+// Start a new game with size of (10 x 10) and 10 mines, and log the current duration on change.
 const game = new Minesweeper(
   { width: 10, height: 10 },
   10,
