@@ -67,7 +67,7 @@ class Minesweeper {
         this.cellMap[x][y] = {
           key: `${x},${y}`,
           hasMine: false,
-          adjacentMines: 0,
+          adjMinesCount: 0,
           revealed: false,
           boomed: false,
         };
@@ -103,7 +103,7 @@ class Minesweeper {
           // Set cell as revealed.
           this.cellMap[x][y].revealed = true;
 
-          if (this.cellMap[x][y].adjacentMines === 0) {
+          if (this.cellMap[x][y].adjMinesCount === 0) {
             for (let i = x - 1; i <= x + 1; i += 1) {
               for (let j = y - 1; j <= y + 1; j += 1) {
                 const isCenterCoord = i === x && j === y;
@@ -156,7 +156,7 @@ class Minesweeper {
       for (let j = y - 1; j <= y + 1; j += 1) {
         const isMineCoord = i === x && j === y;
         if (!isMineCoord && !this.isOutsideBorder([i, j])) {
-          this.cellMap[i][j].adjacentMines += 1;
+          this.cellMap[i][j].adjMinesCount += 1;
         }
       }
     }
@@ -191,4 +191,4 @@ class Minesweeper {
 }
 
 export default Minesweeper;
-export type { GameInfo, Coordinate, CellMap };
+export type { GameInfo, Coordinate, CellMap, Status };

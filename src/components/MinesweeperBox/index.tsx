@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Minesweeper, { Coordinate, GameInfo } from '@/lib/minesweeper';
 import Panel from './Panel';
-import SquareMap from './SquareMap';
+import SquaresMap from './SquaresMap';
 
 type Props = {
   size: { width: number; height: number };
@@ -42,9 +42,8 @@ const MinesweeperBox = function MinesweeperBox(props: Props) {
   return (
     <section className="inline-flex border-[1px] border-black p-[10px]">
       <section className="inline-flex flex-col border-[1px] border-black">
-        <Panel onResetClick={onResetClick} />
-        <section className="grow border-t-[1px] border-black" />
-        <SquareMap cellMap={gameInfo.map} onSquareClick={onSquareClick} />
+        <Panel status={gameInfo.status} onResetClick={onResetClick} />
+        <SquaresMap cellMap={gameInfo.map} onSquareClick={onSquareClick} />
       </section>
     </section>
   );

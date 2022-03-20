@@ -17,21 +17,21 @@ export function getCoordOfFirstMatchedCell(
   options: {
     hasMine?: boolean;
     revealed?: boolean;
-    adjacentMines?: number;
+    adjMinesCount?: number;
   }
 ): Coordinate {
   for (let i = 0; i < cellMap.length; i += 1) {
     for (let j = 0; j < cellMap[i].length; j += 1) {
-      const { hasMine, revealed, adjacentMines } = cellMap[i][j];
+      const { hasMine, revealed, adjMinesCount } = cellMap[i][j];
       const hasMineDoesmatch =
         options.hasMine === undefined || hasMine === options.hasMine;
       const revealedDoesmatch =
         options.revealed === undefined || revealed === options.revealed;
-      const adjacentMinesDoesmatch =
-        options.adjacentMines === undefined ||
-        adjacentMines === options.adjacentMines;
+      const adjMinesCountDoesmatch =
+        options.adjMinesCount === undefined ||
+        adjMinesCount === options.adjMinesCount;
 
-      if (hasMineDoesmatch && revealedDoesmatch && adjacentMinesDoesmatch) {
+      if (hasMineDoesmatch && revealedDoesmatch && adjMinesCountDoesmatch) {
         return [i, j];
       }
     }

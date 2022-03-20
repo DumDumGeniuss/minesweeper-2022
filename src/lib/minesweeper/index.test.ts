@@ -138,14 +138,14 @@ describe('Minesweeper', () => {
       // const coordOne = getCoordOfFirstMatchedCell(game.getGameInfo().map, {
       //   hasMine: false,
       //   revealed: false,
-      //   adjacentMines: 0,
+      //   adjMinesCount: 0,
       // });
       // game.revealCell(coordOne);
 
       // const coordTwo = getCoordOfFirstMatchedCell(game.getGameInfo().map, {
       //   hasMine: false,
       //   revealed: false,
-      //   adjacentMines: 0,
+      //   adjMinesCount: 0,
       // });
       // expect(coord).toEqual([-1, -1]);
       expect(true).toBe(true);
