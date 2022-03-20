@@ -1,25 +1,25 @@
 import { CellMap, Coordinate } from '@/lib/minesweeper';
-import Square from './Square';
+import Cell from './Cell';
 
 type Props = {
   cellMap: CellMap;
-  onSquareClick: (c: Coordinate) => any;
+  onCellClick: (c: Coordinate) => any;
 };
 
-const SquaresMap = function SquaresMap({ cellMap, onSquareClick }: Props) {
+const CellsMap = function CellsMap({ cellMap, onCellClick }: Props) {
   return (
     <section className="inline-flex flex-col border-[1px] border-black">
       {cellMap.map((cells, x) => (
         <section key={cells[0].key} className="flex">
           {cells.map((cell, y) => (
-            <section key={cell.key} className={`w-[${20}px] h-[${20}px]`}>
-              <Square
+            <section key={cell.key} className="w-[20px] h-[20px]">
+              <Cell
                 revealed={cell.revealed}
                 adjMinesCount={cell.adjMinesCount}
                 hasMine={cell.hasMine}
                 boomed={cell.boomed}
                 coord={[x, y]}
-                onClick={onSquareClick}
+                onClick={onCellClick}
               />
             </section>
           ))}
@@ -29,4 +29,4 @@ const SquaresMap = function SquaresMap({ cellMap, onSquareClick }: Props) {
   );
 };
 
-export default SquaresMap;
+export default CellsMap;

@@ -1,4 +1,4 @@
-import { CellMap, Size, Status, Coordinate, GameInfo } from './types';
+import { CellMap, Size, Status, Coordinate, Progress } from './types';
 
 export const getOutsideBorderError = (c: Coordinate) =>
   Error(`Coordinate (${c[0]}, ${c[1]}) is outside border.`);
@@ -20,45 +20,67 @@ export const getGameHasEndedError = () => Error('The game has ended.');
 class Minesweeper {
   private cellMap: CellMap = [];
 
-  private mineCount: number = 0;
+  private minesCount: number = 0;
+
+  private revealedCellCount: number = 0;
 
   private size: Size = { width: 0, height: 0 };
 
-  private status: Status = 'WAITING';
+  private status: Status = 'SLEEPING';
 
-  constructor(size: Size, mineCount: number) {
+  constructor(size: Size, minesCount: number) {
     this.size = size;
-    this.mineCount = mineCount;
+    this.minesCount = minesCount;
 
     if (this.size.width < 0 || this.size.height < 0) {
       throw getIncorrectSizeError();
     }
 
-    if (this.mineCount >= this.size.width * this.size.height) {
+    if (this.minesCount >= this.size.width * this.size.height) {
       throw getTooManyMinesError();
     }
-    if (this.mineCount < 1) {
+    if (this.minesCount < 1) {
       throw getIncorrectMinesCountError();
     }
 
     this.reset();
   }
 
+  /**
+   * Check if the coordinate is outside border.
+   * @param c
+   * @returns boolean
+   */
   private isOutsideBorder(c: Coordinate): boolean {
     const [x, y] = c;
     return x < 0 || x >= this.size.width || y < 0 || y >= this.size.height;
   }
 
-  getGameInfo(): GameInfo {
+  /**
+   * Get area of the map.
+   * @returns number
+   */
+  private getArea(): number {
+    return this.size.width * this.size.height;
+  }
+
+  /**
+   * Get game information.
+   * @returns Progress
+   */
+  getProgress(): Progress {
     return {
-      map: JSON.parse(JSON.stringify(this.cellMap)),
-      size: this.size,
+      cellMap: this.cellMap,
       status: this.status,
     };
   }
 
-  reset() {
-    this.status = 'WAITING';
+  /**
+   * Reset game.
+   */
+  reset(): Progress {
+    this.revealedCellCount = 0;
+    this.status = 'SLEEPING';
 
     this.cellMap = [];
     for (let x = 0; x < this.size.width; x += 1) {
@@ -74,19 +96,26 @@ class Minesweeper {
       }
     }
 
-    return this.cellMap;
+    return this.getProgress();
   }
 
-  // Reveal a mine cell.
-  private revealMineCell(c: Coordinate) {
+  /**
+   * Reveal a cell with mines.
+   * @param c
+   */
+  private revealCellWithMines(c: Coordinate) {
     const [x, y] = c;
-    this.revealAllCells();
     this.status = 'FAILED';
     this.cellMap[x][y].boomed = true;
+    this.setAllCellsRevealed();
   }
 
-  // Reveal a non-mine cell.
-  private revealNonMineCell(c: Coordinate) {
+  /**
+   * Reveal a cell without mines, also recursively reveal all adjecent cells
+   * also without mines.
+   * @param c
+   */
+  private revealCellWithoutMines(c: Coordinate) {
     const visitedMap: { [key: string]: true } = {};
     const minesToReveal: Coordinate[] = [];
     minesToReveal.push(c);
@@ -100,8 +129,7 @@ class Minesweeper {
         visitedMap[coordKey] = true;
 
         if (!this.cellMap[x][y].hasMine && !this.cellMap[x][y].revealed) {
-          // Set cell as revealed.
-          this.cellMap[x][y].revealed = true;
+          this.setCellRevealed([x, y]);
 
           if (this.cellMap[x][y].adjMinesCount === 0) {
             for (let i = x - 1; i <= x + 1; i += 1) {
@@ -116,13 +144,19 @@ class Minesweeper {
         }
       }
     }
+
+    // If all cells without mines have been revealed.
+    if (this.revealedCellCount + this.minesCount === this.getArea()) {
+      this.status = 'SUCCEEDED';
+      this.setAllCellsRevealed();
+    }
   }
 
   /**
    * Reveal a cell.
    * @param c Coordinate
    */
-  revealCell(c: Coordinate) {
+  revealCell(c: Coordinate): Progress {
     if (this.status === 'FAILED' || this.status === 'SUCCEEDED') {
       throw getGameHasEndedError();
     }
@@ -135,18 +169,22 @@ class Minesweeper {
     }
 
     if (this.cellMap[x][y].hasMine) {
-      // When clicking a mine cell.
-      this.revealMineCell(c);
-    } else if (this.status === 'WAITING') {
-      // When clicking a non-mine cell for the very first time.
+      this.revealCellWithMines(c);
+    } else if (this.status === 'SLEEPING') {
       this.plantMines(c);
       this.status = 'STARTED';
-      this.revealNonMineCell(c);
+      this.revealCellWithoutMines(c);
     } else {
-      this.revealNonMineCell(c);
+      this.revealCellWithoutMines(c);
     }
+
+    return this.getProgress();
   }
 
+  /**
+   * Plant mine at desired coodinate.
+   * @param c Coordinate
+   */
   private plantMine(c: Coordinate) {
     const [x, y] = c;
     this.cellMap[x][y].hasMine = true;
@@ -163,13 +201,13 @@ class Minesweeper {
   }
 
   /**
-   * Plant mines and calculate adjacent mine counts of all cells.
+   * Randomly plant mines and calculate adjacent mine counts of all cells.
    */
   private plantMines(excluededCoord: Coordinate) {
     let plantedMinesCount = 0;
     const [excludedX, excludedY] = excluededCoord;
 
-    while (plantedMinesCount < this.mineCount) {
+    while (plantedMinesCount < this.minesCount) {
       const x: number = Math.floor(Math.random() * this.size.width);
       const y: number = Math.floor(Math.random() * this.size.height);
       const { hasMine, revealed } = this.cellMap[x][y];
@@ -181,14 +219,26 @@ class Minesweeper {
     }
   }
 
-  private revealAllCells() {
+  /**
+   * Set reveaved of the cell to true.
+   */
+  private setCellRevealed(c: Coordinate) {
+    const [x, y] = c;
+    this.cellMap[x][y].revealed = true;
+    this.revealedCellCount += 1;
+  }
+
+  /**
+   * Set reveaved of all cells to true.
+   */
+  private setAllCellsRevealed() {
     for (let x = 0; x < this.size.width; x += 1) {
       for (let y = 0; y < this.size.height; y += 1) {
-        this.cellMap[x][y].revealed = true;
+        this.setCellRevealed([x, y]);
       }
     }
   }
 }
 
 export default Minesweeper;
-export type { GameInfo, Coordinate, CellMap, Status };
+export type { Progress, Coordinate, CellMap, Status };

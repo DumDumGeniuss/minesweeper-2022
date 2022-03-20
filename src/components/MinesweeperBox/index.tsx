@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import Minesweeper, { Coordinate, GameInfo } from '@/lib/minesweeper';
+import Minesweeper, { Coordinate, Progress } from '@/lib/minesweeper';
+import Wrapper from './Wrapper';
 import Panel from './Panel';
-import SquaresMap from './SquaresMap';
+import CellsMap from './CellsMap';
 
 type Props = {
   size: { width: number; height: number };
@@ -11,24 +12,23 @@ type Props = {
 const MinesweeperBox = function MinesweeperBox(props: Props) {
   const { size, minesCount } = props;
   const [minesweeper, setMinesweeper] = useState<Minesweeper | null>(null);
-  const [gameInfo, setGameInfo] = useState<GameInfo>({
-    map: [],
-    size: { width: 0, height: 0 },
-    status: 'WAITING',
+  const [progress, setProgress] = useState<Progress>({
+    cellMap: [],
+    status: 'SLEEPING',
   });
 
   useEffect(() => {
     const ms = new Minesweeper(size, minesCount);
     setMinesweeper(ms);
-    setGameInfo(ms.getGameInfo());
-  }, []);
+    setProgress(ms.getProgress());
+  }, [size, minesCount]);
 
-  const onSquareClick = (c: Coordinate): any => {
+  const onCellClick = (c: Coordinate): any => {
     if (!minesweeper) {
       return;
     }
     minesweeper.revealCell(c);
-    setGameInfo(minesweeper.getGameInfo());
+    setProgress(minesweeper.getProgress());
   };
 
   const onResetClick = () => {
@@ -36,16 +36,16 @@ const MinesweeperBox = function MinesweeperBox(props: Props) {
       return;
     }
     minesweeper.reset();
-    setGameInfo(minesweeper.getGameInfo());
+    setProgress(minesweeper.getProgress());
   };
 
   return (
-    <section className="inline-flex border-[1px] border-black p-[10px]">
-      <section className="inline-flex flex-col border-[1px] border-black">
-        <Panel status={gameInfo.status} onResetClick={onResetClick} />
-        <SquaresMap cellMap={gameInfo.map} onSquareClick={onSquareClick} />
-      </section>
-    </section>
+    <Wrapper
+      panel={<Panel status={progress.status} onResetClick={onResetClick} />}
+      cellMap={
+        <CellsMap cellMap={progress.cellMap} onCellClick={onCellClick} />
+      }
+    />
   );
 };
 

@@ -11,12 +11,14 @@ const Panel = function Panel({ status, onResetClick }: Props) {
     emoji = '😢';
   } else if (status === 'SUCCEEDED') {
     emoji = '😃';
+  } else if (status === 'SLEEPING') {
+    emoji = '😴';
   } else {
     emoji = '🙂';
   }
 
   return (
-    <section className="inline-flex flex-col border-[1px] border-black">
+    <section className="flex flex-col border-[1px] border-black">
       <section className="flex items-center justify-between p-[10px]">
         <section />
         <button

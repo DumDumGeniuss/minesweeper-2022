@@ -20,12 +20,11 @@ export type Size = {
   height: number;
 };
 
-export type Status = 'WAITING' | 'STARTED' | 'SUCCEEDED' | 'FAILED';
+export type Status = 'SLEEPING' | 'STARTED' | 'SUCCEEDED' | 'FAILED';
 
 export type Coordinate = [number, number];
 
-export type GameInfo = {
-  map: CellMap;
-  size: Size;
+export type Progress = {
+  cellMap: CellMap;
   status: Status;
 };

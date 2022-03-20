@@ -1,11 +1,11 @@
 import { Coordinate } from '@/lib/minesweeper';
 
-type UnrevealedSquareProps = {
+type UnrevealedCellProps = {
   coord: Coordinate;
   onClick: (c: Coordinate) => any;
 };
 
-function UnrevealedSquare({ coord, onClick }: UnrevealedSquareProps) {
+function UnrevealedCell({ coord, onClick }: UnrevealedCellProps) {
   return (
     <button
       className="inline-flex bg-lime-200 w-full h-full shadow-sm"
@@ -21,23 +21,23 @@ function UnrevealedSquare({ coord, onClick }: UnrevealedSquareProps) {
   );
 }
 
-type MineSquarePoprs = {
+type MineCellPoprs = {
   boomed: boolean;
 };
 
-function MineSquare({ boomed }: MineSquarePoprs) {
+function MineCell({ boomed }: MineCellPoprs) {
   return (
     <section className="inline-flex w-full h-full justify-center items-center">
-      <span>{boomed ? '💣!' : '💣'}</span>
+      <span>{boomed ? '💥' : '💣'}</span>
     </section>
   );
 }
 
-type NormalSquareProps = {
+type NormalCellProps = {
   adjMinesCount: number;
 };
 
-function NormalSquare({ adjMinesCount }: NormalSquareProps) {
+function NormalCell({ adjMinesCount }: NormalCellProps) {
   return (
     <section className="inline-flex w-full h-full justify-center items-center">
       <span>{adjMinesCount}</span>
@@ -54,7 +54,7 @@ type Props = {
   onClick: (c: Coordinate) => any;
 };
 
-const Square = function Square({
+const Cell = function Cell({
   revealed,
   adjMinesCount,
   hasMine,
@@ -62,17 +62,19 @@ const Square = function Square({
   coord,
   onClick,
 }: Props) {
-  let squareCom: JSX.Element | null = null;
+  let cellComponent: JSX.Element | null = null;
 
   if (!revealed) {
-    squareCom = <UnrevealedSquare coord={coord} onClick={onClick} />;
+    cellComponent = <UnrevealedCell coord={coord} onClick={onClick} />;
   } else if (hasMine) {
-    squareCom = <MineSquare boomed={boomed} />;
+    cellComponent = <MineCell boomed={boomed} />;
   } else {
-    squareCom = <NormalSquare adjMinesCount={adjMinesCount} />;
+    cellComponent = <NormalCell adjMinesCount={adjMinesCount} />;
   }
 
-  return <section className="inline-flex w-full h-full">{squareCom}</section>;
+  return (
+    <section className="inline-flex w-full h-full">{cellComponent}</section>
+  );
 };
 
-export default Square;
+export default Cell;
