@@ -8,7 +8,7 @@ type UnrevealedCellProps = {
 function UnrevealedCell({ coord, onClick }: UnrevealedCellProps) {
   return (
     <button
-      className="flex w-full h-full"
+      className="flex justify-center items-center w-full h-full bg-gray-300"
       type="button"
       aria-label="Click cell"
       onClick={() => {
@@ -28,9 +28,13 @@ type MineCellPoprs = {
 };
 
 function MineCell({ boomed }: MineCellPoprs) {
+  const bgColor = boomed ? 'bg-red-200' : 'bg-slate-100';
+  const emoji = boomed ? '💥' : '💣';
   return (
-    <section className="flex w-full h-full justify-center items-center">
-      <section>{boomed ? '💥' : '💣'}</section>
+    <section
+      className={`flex w-full h-full justify-center items-center ${bgColor}`}
+    >
+      <section>{emoji}</section>
     </section>
   );
 }
@@ -39,10 +43,23 @@ type NormalCellProps = {
   adjMinesCount: number;
 };
 
+const countColorMap: { [key: number]: string } = {
+  1: 'text-blue-500',
+  2: 'text-green-600',
+  3: 'text-red-500',
+  4: 'text-purple-500',
+  5: 'text-red-800',
+  6: 'text-blue-300',
+  7: 'text-black-500',
+  8: 'text-gray-500',
+};
+
 function NormalCell({ adjMinesCount }: NormalCellProps) {
   return (
-    <section className="flex w-full h-full justify-center items-center">
-      <section>{adjMinesCount}</section>
+    <section className="flex w-full h-full justify-center items-center bg-slate-100">
+      <section className={`${countColorMap[adjMinesCount]} font-bold`}>
+        {adjMinesCount || ''}
+      </section>
     </section>
   );
 }
@@ -74,7 +91,11 @@ const Cell = function Cell({
     cellComponent = <NormalCell adjMinesCount={adjMinesCount} />;
   }
 
-  return <section className="w-full h-full">{cellComponent}</section>;
+  return (
+    <section className="w-full h-full border-[1px] border-[#e5e7eb]">
+      {cellComponent}
+    </section>
+  );
 };
 
 export default Cell;

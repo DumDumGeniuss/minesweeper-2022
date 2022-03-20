@@ -8,14 +8,14 @@ type Props = {
 
 const CellsMap = function CellsMap({ cellMap, onCellClick }: Props) {
   return (
-    <section className="flex flex-col border-[1px] border-black">
+    <section className="flex flex-col border-[1px] border-[#313131]">
       {cellMap.map((cells, x) => (
         <section
           key={cells[0].key}
           className="flex justify-center items-center"
         >
           {cells.map((cell, y) => (
-            <section key={cell.key} className="w-[20px] h-[20px]">
+            <section key={cell.key} className="w-[32px] h-[32px]">
               <Cell
                 revealed={cell.revealed}
                 adjMinesCount={cell.adjMinesCount}

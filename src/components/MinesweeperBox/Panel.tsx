@@ -25,22 +25,22 @@ const Panel = function Panel({
   }
 
   return (
-    <section className="flex flex-col border-[1px] border-black">
+    <section className="flex flex-col border-[1px] border-black bg-gray-200">
       <section className="flex items-center justify-between p-[10px]">
-        <section className="inline-flex justify-center items-center h-[40px] px-2 border-[1px] border-black">
+        <section className="flex justify-between items-center w-16 h-10 border-[1px] border-black bg-slate-100 px-2">
           <section>💣</section>
           <section>{minesCount.toString(10)}</section>
         </section>
         <button
-          className="w-[40px] h-[40px] inline-flex items-center justify-center border-[1px] border-black"
+          className="w-[40px] h-10 flex items-center justify-center rounded-lg bg-white"
           type="button"
           aria-label="Reset game"
           onClick={onResetClick}
           onKeyDown={onResetClick}
         >
-          <section className="text-4xl">{emoji}</section>
+          <section className="text-2xl">{emoji}</section>
         </button>
-        <section className="inline-flex justify-center items-center h-[40px] px-2 border-[1px] border-black">
+        <section className="flex justify-between items-center w-16 h-10 border-[1px] border-black bg-slate-100 px-2">
           <section>⏰</section>
           <section>{duration}</section>
         </section>
