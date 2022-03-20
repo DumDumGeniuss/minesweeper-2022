@@ -6,6 +6,24 @@ This repository is initialized with [dumdum-next-boilerplate-2022](https://githu
 
 ![Vercel](https://vercelbadge.vercel.app/api/DumDumGeniuss/dumdum-next-boilerplate-2022)
 
+## Demo
+
+The app is deployed here:
+
+[https://minesweeper-2022-dumdumgenius.vercel.app/](https://minesweeper-2022-dumdumgenius.vercel.app/)
+
+## Infrastructure
+
+We have two main modules that build the entire Minesweeper game:
+
+### 1. Minesweeper Class
+
+This is a **"class"** that encapsulates everything you need in a Minesweeper game, with its simple API, you as a user are allowed to focus on building UI without bothering with complex logic of the game.
+
+### 2. MinesweeperBox
+
+This is a React component in charge of rending the UI for users to interact with a Minesweeper game, with the help of Minesweeper class, this component was built with super low complexity thanks to Minesweeper class :).
+
 ## Commands
 
 ### Installation
@@ -53,11 +71,3 @@ Please make .husky/pre-commit executable
 ```bash
 chmod +x .husky/pre-commit
 ```
-
-## Storybook
-
-Coming soon, maybe.
-
-## E2E Tests
-
-Not yet decided which tool to go with [Cypress](https://www.cypress.io/) of [Playwright](https://playwright.dev/)?.
