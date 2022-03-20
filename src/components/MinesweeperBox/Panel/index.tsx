@@ -31,7 +31,7 @@ const Panel = function Panel({
         <section>{minesCount.toString(10)}</section>
       </section>
       <button
-        className="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-100 drop-shadow-md hover:drop-shadow-none"
+        className="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200"
         type="button"
         aria-label="Reset game"
         onClick={onResetClick}
