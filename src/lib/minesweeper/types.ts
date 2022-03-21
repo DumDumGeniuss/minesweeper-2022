@@ -1,19 +1,19 @@
 /**
- * Cell
- * @field hasMine boolean Does this cell has a mine?
- * @field adjMinesCount number How many adjaent mines does this cell has?
- * @field revealed boolean Has this cell been revealed?
- * @field boomed boolean Have you revealed this cell when it has a mine?
+ * Area
+ * @field hasMines boolean Does this area has a mine?
+ * @field adjMinesCount number How many adjaent mines does this area has?
+ * @field revealed boolean Has this area been revealed?
+ * @field boomed boolean Have you revealed this area when it has a mine?
  */
-export type Cell = {
-  hasMine: boolean;
+export type Area = {
+  hasMines: boolean;
   adjMinesCount: number;
   revealed: boolean;
   boomed: boolean;
   coord: Coordinate;
 };
 
-export type CellsMap = Cell[][];
+export type Field = Area[][];
 
 export type Size = {
   width: number;
@@ -25,7 +25,7 @@ export type Status = 'SLEEPING' | 'STARTED' | 'SUCCEEDED' | 'FAILED';
 export type Coordinate = [number, number];
 
 export type Progress = {
-  cellsMap: CellsMap;
+  field: Field;
   status: Status;
   minesCount: number;
   size: Size;

@@ -24,7 +24,7 @@ const game = new Minesweeper(
 ## Minesweeper.reset()
 
 ```typescript
-reset() => Progress
+() => Progress;
 ```
 
 This method will restart the game and return new game progress.
@@ -32,36 +32,36 @@ This method will restart the game and return new game progress.
 ## Minesweeper.getProgress()
 
 ```typescript
-getProgress() => Progress
+() => Progress;
 ```
 
-Get progress of the game, this will include statue, cells map, etc.
+Get progress of the game, this will include statue, areas map, etc.
 
-## Minesweeper.revealCell()
+## Minesweeper.revealArea()
 
 ```typescript
-revealCell(coord: Coordinate) => Progress
+revealArea(coord: Coordinate) => Progress
 ```
 
-Reveal the cell at the given coordiante and return updated game progress, it has 3 possible cases:
+Reveal the area at the given coordiante and return updated game progress, it has 3 possible cases:
 
-1. Reveal a cell with mines, the mission will fail and all cells will be revealed.
+1. Reveal an area with mines, the mission will fail and all areas will be revealed.
 
-2. Reveal a cell without mines, if that cell has no surrounded mines, we will recursively reveal its adjacent cells until a cell with adjacent mines is found.
+2. Reveal an area without mines, if that area has no surrounded mines, we will recursively reveal its adjacent areas until an area with adjacent mines is found.
 
-3. If you reveal a cell for the very first time, we randomly plant mines of the given count and do step 2.
+3. If you reveal an area for the very first time, we randomly plant mines of the given count and do step 2.
 
 ```typescript
 const game = new Minesweeper({ width: 10, height: 10 }, 10, null);
 
-// Reveal cell at (0, 0), this will plant mines and start the game.
-game.revealCell([0, 0]);
+// Reveal area at (0, 0), this will plant mines and start the game.
+game.revealArea([0, 0]);
 
-// Reveal cell at (5, 5), let's assume this cell has no adjacent mines, so we keep revealing its adjacent cells.
-game.revealCell([5, 5]);
+// Reveal area at (5, 5), let's assume this area has no adjacent mines, so we keep revealing its adjacent areas.
+game.revealArea([5, 5]);
 
-// Reveal cell at (7, 7), let's assume this cell has mines, so the mission will fail and all cells will be revealed.
-game.revealCell([7, 7]);
+// Reveal area at (7, 7), let's assume this area has mines, so the mission will fail and all areas will be revealed.
+game.revealArea([7, 7]);
 ```
 
 ## Minesweeper.destroy()

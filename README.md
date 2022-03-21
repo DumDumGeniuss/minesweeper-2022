@@ -30,6 +30,8 @@ Check here for details [Minesweeper Class](https://github.com/DumDumGeniuss/mine
 
 This is a React component in charge of rending the UI for users to interact with a Minesweeper game, with the help of Minesweeper class, this component was built with super low complexity thanks to Minesweeper class :).
 
+Check here for details [MinesweeperBox](https://github.com/DumDumGeniuss/minesweeper-2022/blob/main/src/components/MinesweeperBox/README.md).
+
 ## Commands
 
 ### Installation

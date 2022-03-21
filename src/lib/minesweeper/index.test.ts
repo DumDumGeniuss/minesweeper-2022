@@ -1,3 +1,4 @@
+import { pause } from '@/utils/common';
 import { Coordinate, Progress } from './types';
 import Minesweeper, {
   getIncorrectSizeError,
@@ -7,21 +8,32 @@ import Minesweeper, {
   getHasBeenRevealedError,
   getGameHasEndedError,
 } from '.';
-import { getMinesCount, getCoordOfFirstMatchedCell } from './utils';
+import { getMinesCount, getCoordOfFirstMatchedArea } from './utils';
 
 describe('Minesweeper', () => {
   describe('constructor', () => {
-    it('Should create new instance with all unrevealed cells.', () => {
+    it('Should create new instance with all unrevealed areas.', () => {
       const game = new Minesweeper({ width: 2, height: 2 }, 1, null);
-      const progress: Progress = game.revealCell([0, 0]);
-      const minesCount = getMinesCount(progress.cellsMap);
+      const progress: Progress = game.revealArea([0, 0]);
+      const minesCount = getMinesCount(progress.field);
       expect(minesCount).toEqual(1);
     });
     it('Should have no mines on initail map.', () => {
       const game = new Minesweeper({ width: 2, height: 2 }, 1, null);
       const progress = game.getProgress();
-      const minesCount = getMinesCount(progress.cellsMap);
+      const minesCount = getMinesCount(progress.field);
       expect(minesCount).toBe(0);
+    });
+    it('Should periodically call onDurationChange callback.', async () => {
+      const onDurationChange = jest.fn();
+      const game = new Minesweeper(
+        { width: 2, height: 2 },
+        1,
+        onDurationChange
+      );
+      game.revealArea([0, 0]);
+      await pause(2);
+      expect(onDurationChange.mock.calls.length).toBeGreaterThan(0);
     });
     it('Should throw error when initializing with incorrect size.', () => {
       try {
@@ -51,88 +63,105 @@ describe('Minesweeper', () => {
   describe('reset', () => {
     it('Should reset game with no mines.', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 5, null);
-      // Let's reveal cell to plant mines.
-      let progress: Progress = game.revealCell([0, 0]);
+      // Let's reveal area to plant mines.
+      let progress: Progress = game.revealArea([0, 0]);
       // Reset game
       progress = game.reset();
-      const minesCount = getMinesCount(progress.cellsMap);
+      const minesCount = getMinesCount(progress.field);
 
       expect(minesCount).toBe(0);
     });
   });
-  describe('revealCell', () => {
-    it('Should plant mimnes when first time cliking a cell.', () => {
+  describe('revealArea', () => {
+    it('Should plant mimnes when first time cliking an area.', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 5, null);
-      const progress: Progress = game.revealCell([0, 0]);
-      const minesCount = getMinesCount(progress.cellsMap);
+      const progress: Progress = game.revealArea([0, 0]);
+      const minesCount = getMinesCount(progress.field);
       expect(minesCount).toBe(5);
     });
     it('Should throw error when coordinate is outside border.', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 5, null);
       const c: Coordinate = [4, 4];
       try {
-        game.revealCell(c);
+        game.revealArea(c);
       } catch (e: any) {
         expect(e.message).toBe(getOutsideBorderError(c).message);
       }
     });
-    it('Should throw error when a cell has been revealed.', () => {
+    it('Should throw error when an area has been revealed.', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 4, null);
       const c: Coordinate = [0, 0];
-      game.revealCell(c);
+      game.revealArea(c);
       try {
-        game.revealCell(c);
+        game.revealArea(c);
         expect(true).toBe(false);
       } catch (e: any) {
         expect(e.message).toBe(getHasBeenRevealedError(c).message);
       }
     });
-    it('Should throw error when a game has ended and a cell is revealed.', () => {
+    it('Should throw error when a game has ended and an area is revealed.', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 1, null);
       const c: Coordinate = [0, 0];
-      const progress: Progress = game.revealCell(c);
-      const coord: Coordinate = getCoordOfFirstMatchedCell(progress.cellsMap, {
-        hasMine: true,
+      const progress: Progress = game.revealArea(c);
+      const coord: Coordinate = getCoordOfFirstMatchedArea(progress.field, {
+        hasMines: true,
         revealed: false,
       });
       try {
-        game.revealCell(coord);
-        game.revealCell(coord);
+        game.revealArea(coord);
+        game.revealArea(coord);
         expect(true).toBe(false);
       } catch (e: any) {
         expect(e.message).toBe(getGameHasEndedError().message);
       }
     });
-    it('Should reveal the cell at the coordinate.', () => {
+    it('Should reveal the area at the coordinate.', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 5, null);
       let progress: Progress = game.getProgress();
-      const coord: Coordinate = getCoordOfFirstMatchedCell(progress.cellsMap, {
-        hasMine: false,
+      const coord: Coordinate = getCoordOfFirstMatchedArea(progress.field, {
+        hasMines: false,
         revealed: false,
       });
-      progress = game.revealCell(coord);
+      progress = game.revealArea(coord);
       const [x, y] = coord;
 
-      expect(progress.cellsMap[x][y].revealed).toBe(true);
+      expect(progress.field[x][y].revealed).toBe(true);
     });
     it('Should end game when clicking a bomb.', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 4, null);
-      let progress: Progress = game.revealCell([0, 0]);
-      const coord = getCoordOfFirstMatchedCell(game.getProgress().cellsMap, {
-        hasMine: true,
+      let progress: Progress = game.revealArea([0, 0]);
+      const coord = getCoordOfFirstMatchedArea(game.getProgress().field, {
+        hasMines: true,
         revealed: false,
       });
-      progress = game.revealCell(coord);
+      progress = game.revealArea(coord);
       const [x, y] = coord;
 
       expect(progress.status).toBe('FAILED');
-      expect(progress.cellsMap[x][y].boomed).toBe(true);
+      expect(progress.field[x][y].boomed).toBe(true);
     });
-    it('Should set status to "SUCCEED" when all cells without mines have been revealed.', () => {
+    it('Should set status to "SUCCEED" when all areas without mines have been revealed.', () => {
       const game = new Minesweeper({ width: 2, height: 1 }, 1, null);
-      const progress: Progress = game.revealCell([0, 0]);
+      const progress: Progress = game.revealArea([0, 0]);
 
       expect(progress.status).toBe('SUCCEEDED');
+    });
+  });
+  describe('revealArea', () => {
+    it('Should clear onDurationChange interval after destroy is called.', async () => {
+      const onDurationChange = jest.fn();
+      const game = new Minesweeper(
+        { width: 2, height: 2 },
+        1,
+        onDurationChange
+      );
+      game.revealArea([0, 0]);
+      await pause(2);
+      const tmpCallsCount = onDurationChange.mock.calls.length;
+      game.destroy();
+      await pause(2);
+
+      expect(tmpCallsCount).toBe(onDurationChange.mock.calls.length);
     });
   });
 });

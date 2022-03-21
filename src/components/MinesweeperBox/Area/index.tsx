@@ -1,21 +1,20 @@
-import { Coordinate } from '@/lib/minesweeper';
-
-type UnrevealedCellProps = {
-  coord: Coordinate;
-  onClick: (c: Coordinate) => any;
+type UnrevealedAreaAreaProps = {
+  x: number;
+  y: number;
+  onClick: (x: number, y: number) => any;
 };
 
-function UnrevealedCell({ coord, onClick }: UnrevealedCellProps) {
+function UnrevealedArea({ x, y, onClick }: UnrevealedAreaAreaProps) {
   return (
     <button
       className="flex justify-center items-center w-full h-full bg-white hover:bg-slate-100"
       type="button"
-      aria-label="Reveal cell"
+      aria-label="Reveal area"
       onClick={() => {
-        onClick(coord);
+        onClick(x, y);
       }}
       onKeyDown={() => {
-        onClick(coord);
+        onClick(x, y);
       }}
     >
       🌱
@@ -23,11 +22,11 @@ function UnrevealedCell({ coord, onClick }: UnrevealedCellProps) {
   );
 }
 
-type MineCellPoprs = {
+type MineAreaPoprs = {
   boomed: boolean;
 };
 
-function MineCell({ boomed }: MineCellPoprs) {
+function MineArea({ boomed }: MineAreaPoprs) {
   const bgColor = boomed ? 'bg-red-200' : 'bg-slate-100';
   const emoji = boomed ? '💥' : '💣';
   return (
@@ -39,7 +38,7 @@ function MineCell({ boomed }: MineCellPoprs) {
   );
 }
 
-type NormalCellProps = {
+type SafeAreaAreaProps = {
   adjMinesCount: number;
 };
 
@@ -54,7 +53,7 @@ const countColorMap: { [key: number]: string } = {
   8: 'text-gray-500',
 };
 
-function NormalCell({ adjMinesCount }: NormalCellProps) {
+function SafeArea({ adjMinesCount }: SafeAreaAreaProps) {
   return (
     <section className="flex w-full h-full justify-center items-center bg-slate-100">
       <section className={`${countColorMap[adjMinesCount]} font-bold`}>
@@ -64,38 +63,40 @@ function NormalCell({ adjMinesCount }: NormalCellProps) {
   );
 }
 
-type Props = {
+type AreaProps = {
+  x: number;
+  y: number;
   revealed: boolean;
-  hasMine: boolean;
+  hasMines: boolean;
   adjMinesCount: number;
   boomed: boolean;
-  coord: Coordinate;
-  onClick: (c: Coordinate) => any;
+  onClick: (x: number, y: number) => any;
 };
 
-const Cell = function Cell({
+function Area({
+  x,
+  y,
   revealed,
   adjMinesCount,
-  hasMine,
+  hasMines,
   boomed,
-  coord,
   onClick,
-}: Props) {
-  let cellComponent: JSX.Element | null = null;
+}: AreaProps) {
+  let AreaComponent: JSX.Element | null = null;
 
   if (!revealed) {
-    cellComponent = <UnrevealedCell coord={coord} onClick={onClick} />;
-  } else if (hasMine) {
-    cellComponent = <MineCell boomed={boomed} />;
+    AreaComponent = <UnrevealedArea x={x} y={y} onClick={onClick} />;
+  } else if (hasMines) {
+    AreaComponent = <MineArea boomed={boomed} />;
   } else {
-    cellComponent = <NormalCell adjMinesCount={adjMinesCount} />;
+    AreaComponent = <SafeArea adjMinesCount={adjMinesCount} />;
   }
 
   return (
     <section className="w-full h-full rounded-lg overflow-hidden">
-      {cellComponent}
+      {AreaComponent}
     </section>
   );
-};
+}
 
-export default Cell;
+export default Area;

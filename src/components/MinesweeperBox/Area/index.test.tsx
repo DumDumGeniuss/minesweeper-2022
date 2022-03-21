@@ -1,14 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Cell from '.';
+import Area from '.';
 
-describe('Cell', () => {
+describe('Area', () => {
   it('Should render component successfully.', () => {
     try {
       render(
-        <Cell
+        <Area
+          x={0}
+          y={0}
           revealed={false}
-          coord={[0, 0]}
-          hasMine={false}
+          hasMines={false}
           adjMinesCount={0}
           boomed={false}
           onClick={() => {}}
@@ -20,12 +21,13 @@ describe('Cell', () => {
       expect(true).toBe(false);
     }
   });
-  it('Should has bomb emoji when a cell with mine is revealed.', () => {
+  it('Should has bomb emoji when an area with mine is revealed.', () => {
     render(
-      <Cell
+      <Area
+        x={0}
+        y={0}
         revealed
-        coord={[0, 0]}
-        hasMine
+        hasMines
         adjMinesCount={0}
         boomed={false}
         onClick={() => {}}
@@ -33,12 +35,13 @@ describe('Cell', () => {
     );
     expect(screen.getByText('💣')).toBeInTheDocument();
   });
-  it('Should display adjMinesCount when a cell without mine is revealed.', () => {
+  it('Should display adjMinesCount when an area without mine is revealed.', () => {
     render(
-      <Cell
+      <Area
+        x={1}
+        y={1}
         revealed
-        coord={[1, 1]}
-        hasMine={false}
+        hasMines={false}
         adjMinesCount={7}
         boomed={false}
         onClick={() => {}}
@@ -46,12 +49,13 @@ describe('Cell', () => {
     );
     expect(screen.getByText('7')).toBeInTheDocument();
   });
-  it('Should display exploded bomb emoji when a cell with mines is stepped on.', () => {
+  it('Should display exploded bomb emoji when an area with mines is stepped on.', () => {
     render(
-      <Cell
+      <Area
+        x={1}
+        y={1}
         revealed
-        coord={[1, 1]}
-        hasMine
+        hasMines
         adjMinesCount={3}
         boomed
         onClick={() => {}}
@@ -59,13 +63,14 @@ describe('Cell', () => {
     );
     expect(screen.getByText('💥')).toBeInTheDocument();
   });
-  it('Should trigger onClick when Cell is clicked.', () => {
+  it('Should trigger onClick when Area is clicked.', () => {
     const onClick = jest.fn();
     const { container } = render(
-      <Cell
+      <Area
+        x={1}
+        y={1}
         revealed={false}
-        coord={[1, 1]}
-        hasMine={false}
+        hasMines={false}
         adjMinesCount={3}
         boomed={false}
         onClick={onClick}

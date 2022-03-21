@@ -1,10 +1,10 @@
-import { CellsMap, Coordinate } from './types';
+import { Field, Coordinate } from './types';
 
-export function getMinesCount(cellsMap: CellsMap) {
+export function getMinesCount(field: Field) {
   let count = 0;
-  for (let i = 0; i < cellsMap.length; i += 1) {
-    for (let j = 0; j < cellsMap[i].length; j += 1) {
-      if (cellsMap[i][j].hasMine) {
+  for (let i = 0; i < field.length; i += 1) {
+    for (let j = 0; j < field[i].length; j += 1) {
+      if (field[i][j].hasMines) {
         count += 1;
       }
     }
@@ -12,26 +12,26 @@ export function getMinesCount(cellsMap: CellsMap) {
   return count;
 }
 
-export function getCoordOfFirstMatchedCell(
-  cellsMap: CellsMap,
+export function getCoordOfFirstMatchedArea(
+  field: Field,
   options: {
-    hasMine?: boolean;
+    hasMines?: boolean;
     revealed?: boolean;
     adjMinesCount?: number;
   }
 ): Coordinate {
-  for (let i = 0; i < cellsMap.length; i += 1) {
-    for (let j = 0; j < cellsMap[i].length; j += 1) {
-      const { hasMine, revealed, adjMinesCount } = cellsMap[i][j];
-      const hasMineDoesmatch =
-        options.hasMine === undefined || hasMine === options.hasMine;
+  for (let i = 0; i < field.length; i += 1) {
+    for (let j = 0; j < field[i].length; j += 1) {
+      const { hasMines, revealed, adjMinesCount } = field[i][j];
+      const hasMinesDoesmatch =
+        options.hasMines === undefined || hasMines === options.hasMines;
       const revealedDoesmatch =
         options.revealed === undefined || revealed === options.revealed;
       const adjMinesCountDoesmatch =
         options.adjMinesCount === undefined ||
         adjMinesCount === options.adjMinesCount;
 
-      if (hasMineDoesmatch && revealedDoesmatch && adjMinesCountDoesmatch) {
+      if (hasMinesDoesmatch && revealedDoesmatch && adjMinesCountDoesmatch) {
         return [i, j];
       }
     }

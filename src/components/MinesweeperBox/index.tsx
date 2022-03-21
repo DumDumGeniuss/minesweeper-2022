@@ -1,30 +1,66 @@
 import { useEffect, useState, useCallback, memo } from 'react';
-import Minesweeper, { CellsMap, Coordinate, Status } from '@/lib/minesweeper';
-import Wrapper from './Wrapper';
-import Panel from './Panel';
-import GameField from './GameField';
+import Minesweeper, { Field, Status } from '@/lib/minesweeper';
+import WrapperComp from './Wrapper';
+import PanelComp, { Status as PanelStatus } from './Panel';
+import MinefieldComp, { Minefield } from './Minefield';
+
+/**
+ * Convert Status in minesweeper to PanelStatus used in Panel Component.
+ * @param status Status
+ * @returns PanelStatus
+ */
+function convertStatusToPanelStatus(status: Status): PanelStatus {
+  switch (status) {
+    case 'FAILED':
+      return PanelStatus.Failed;
+    case 'STARTED':
+      return PanelStatus.Started;
+    case 'SLEEPING':
+      return PanelStatus.Sleeing;
+    default:
+      return PanelStatus.Succeeded;
+  }
+}
+
+/**
+ * Convert Field in minesweeper to Minefield used in Minefield Component.
+ * @param field Field
+ * @returns Minefield
+ */
+function converFieldToMinefield(field: Field): Minefield {
+  return field.map((areas) =>
+    areas.map((area) => ({
+      x: area.coord[0],
+      y: area.coord[1],
+      revealed: area.revealed,
+      hasMines: area.hasMines,
+      adjMinesCount: area.adjMinesCount,
+      boomed: area.boomed,
+    }))
+  );
+}
 
 type Props = {
   size: { width: number; height: number };
   minesCount: number;
 };
 
-const MemoGameField = memo(GameField);
+const MemoMinefieldComp = memo(MinefieldComp);
 
 const MinesweeperBox = function MinesweeperBox({ size, minesCount }: Props) {
   const [minesweeper, setMinesweeper] = useState<Minesweeper | null>(null);
-  const [cellsMap, setCellsMap] = useState<CellsMap>([]);
-  const [duration, setDuration] = useState<number>(0);
-  const [status, setStatus] = useState<Status>('SLEEPING');
+  const [minefield, setMinefield] = useState<Minefield>([]);
+  const [gameDuration, setGameDuration] = useState<number>(0);
+  const [gameStatus, setGameStatus] = useState<PanelStatus>(0);
 
-  const onCellClick = useCallback(
-    (c: Coordinate): any => {
+  const onAreaClick = useCallback(
+    (x: number, y: number): any => {
       if (!minesweeper) {
         return;
       }
-      const progress = minesweeper.revealCell(c);
-      setCellsMap(progress.cellsMap);
-      setStatus(progress.status);
+      const progress = minesweeper.revealArea([x, y]);
+      setMinefield(converFieldToMinefield(progress.field));
+      setGameStatus(convertStatusToPanelStatus(progress.status));
     },
     [minesweeper]
   );
@@ -34,21 +70,21 @@ const MinesweeperBox = function MinesweeperBox({ size, minesCount }: Props) {
       return;
     }
     const progress = minesweeper.reset();
-    setCellsMap(progress.cellsMap);
-    setStatus(progress.status);
+    setMinefield(converFieldToMinefield(progress.field));
+    setGameStatus(convertStatusToPanelStatus(progress.status));
   }, [minesweeper]);
 
   const onDurationChange = useCallback((d: number) => {
-    setDuration(d);
+    setGameDuration(d);
   }, []);
 
   useEffect(() => {
     const newMs = new Minesweeper(size, minesCount, onDurationChange);
-    setMinesweeper(newMs);
     const progress = newMs.getProgress();
-    setCellsMap(progress.cellsMap);
-    setStatus(progress.status);
-    setDuration(progress.duration);
+    setMinesweeper(newMs);
+    setGameDuration(progress.duration);
+    setMinefield(converFieldToMinefield(progress.field));
+    setGameStatus(convertStatusToPanelStatus(progress.status));
 
     return () => {
       if (minesweeper) {
@@ -58,17 +94,17 @@ const MinesweeperBox = function MinesweeperBox({ size, minesCount }: Props) {
   }, [size, minesCount]);
 
   return (
-    <Wrapper
+    <WrapperComp
       panel={
-        <Panel
-          status={status}
+        <PanelComp
+          status={gameStatus}
           minesCount={minesCount}
-          duration={duration}
+          duration={gameDuration}
           onResetClick={onResetClick}
         />
       }
-      gameField={
-        <MemoGameField cellsMap={cellsMap} onCellClick={onCellClick} />
+      minefield={
+        <MemoMinefieldComp minefield={minefield} onAreaClick={onAreaClick} />
       }
     />
   );

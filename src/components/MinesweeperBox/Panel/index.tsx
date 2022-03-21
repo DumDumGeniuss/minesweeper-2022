@@ -1,4 +1,9 @@
-import { Status } from '@/lib/minesweeper';
+export enum Status {
+  Sleeing = 0,
+  Started = 1,
+  Failed = 2,
+  Succeeded = 3,
+}
 
 export type Props = {
   status: Status;
@@ -14,14 +19,19 @@ const Panel = function Panel({
   onResetClick,
 }: Props) {
   let emoji: string | null = null;
-  if (status === 'FAILED') {
-    emoji = '😢';
-  } else if (status === 'SUCCEEDED') {
-    emoji = '😃';
-  } else if (status === 'SLEEPING') {
-    emoji = '😴';
-  } else {
-    emoji = '🙂';
+  switch (status) {
+    case Status.Failed:
+      emoji = '😢';
+      break;
+    case Status.Succeeded:
+      emoji = '😃';
+      break;
+    case Status.Sleeing:
+      emoji = '😴';
+      break;
+    default:
+      emoji = '🙂';
+      break;
   }
 
   return (

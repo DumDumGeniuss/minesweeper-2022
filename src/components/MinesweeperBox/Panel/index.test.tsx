@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Panel, { Props } from '.';
+import Panel, { Props, Status } from '.';
 
 describe('Panel', () => {
   it('Should render component successfully.', () => {
@@ -7,7 +7,7 @@ describe('Panel', () => {
       const onResetClick = () => {};
       render(
         <Panel
-          status="SLEEPING"
+          status={Status.Sleeing}
           minesCount={1}
           duration={0}
           onResetClick={onResetClick}
@@ -21,7 +21,7 @@ describe('Panel', () => {
   });
   it('Should display correct emoji.', () => {
     const defaultProps: Props = {
-      status: 'SLEEPING',
+      status: Status.Sleeing,
       minesCount: 1,
       duration: 0,
       onResetClick: () => {},
@@ -30,15 +30,15 @@ describe('Panel', () => {
     let faceEmoji = screen.getByText('😴');
     expect(faceEmoji).toBeInTheDocument();
 
-    rerender(<Panel {...defaultProps} status="SUCCEEDED" />);
+    rerender(<Panel {...defaultProps} status={Status.Succeeded} />);
     faceEmoji = screen.getByText('😃');
     expect(faceEmoji).toBeInTheDocument();
 
-    rerender(<Panel {...defaultProps} status="FAILED" />);
+    rerender(<Panel {...defaultProps} status={Status.Failed} />);
     faceEmoji = screen.getByText('😢');
     expect(faceEmoji).toBeInTheDocument();
 
-    rerender(<Panel {...defaultProps} status="STARTED" />);
+    rerender(<Panel {...defaultProps} status={Status.Started} />);
     faceEmoji = screen.getByText('🙂');
     expect(faceEmoji).toBeInTheDocument();
   });
@@ -46,7 +46,7 @@ describe('Panel', () => {
     const onResetClick = jest.fn();
     const { container } = render(
       <Panel
-        status="STARTED"
+        status={Status.Started}
         minesCount={1}
         duration={0}
         onResetClick={onResetClick}
