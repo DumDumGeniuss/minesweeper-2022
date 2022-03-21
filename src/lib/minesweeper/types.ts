@@ -32,4 +32,8 @@ export type Progress = {
   duration: number;
 };
 
-export type OnDurationChange = (duration: number) => any;
+export type DurationChangeListener = (duration: number) => any;
+
+export enum EventType {
+  DurationChange = 'durationChange',
+}

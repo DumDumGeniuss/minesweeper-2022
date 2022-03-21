@@ -4,7 +4,8 @@ import {
   Status,
   Coordinate,
   Progress,
-  OnDurationChange,
+  DurationChangeListener,
+  EventType,
 } from './types';
 
 export const getOutsideBorderError = (c: Coordinate) =>
@@ -39,16 +40,11 @@ class Minesweeper {
 
   private duration: number = 0;
 
-  private onDurationChange: OnDurationChange | null = null;
+  private durationChangeListeners: DurationChangeListener[] = [];
 
-  constructor(
-    size: Size,
-    minesCount: number,
-    onDurationChange: OnDurationChange | null
-  ) {
+  constructor(size: Size, minesCount: number) {
     this.size = size;
     this.minesCount = minesCount;
-    this.onDurationChange = onDurationChange;
 
     if (this.size.width < 0 || this.size.height < 0) {
       throw getIncorrectSizeError();
@@ -74,15 +70,17 @@ class Minesweeper {
     return x < 0 || x >= this.size.width || y < 0 || y >= this.size.height;
   }
 
+  private setDuration(duration: number) {
+    this.duration = duration;
+    this.emitDurationChangeEvents();
+  }
+
   /**
    * This will create an interval that periodically updates the duration count.
    */
   private startDurationCounter() {
     this.counter = setInterval(() => {
-      this.duration += 1;
-      if (this.onDurationChange) {
-        this.onDurationChange(this.duration);
-      }
+      this.setDuration(this.duration + 1);
     }, 1000);
   }
 
@@ -92,6 +90,25 @@ class Minesweeper {
   private stopDurationCounter() {
     if (this.counter) {
       clearInterval(this.counter);
+    }
+  }
+
+  private emitDurationChangeEvents() {
+    this.durationChangeListeners.forEach((sub) => {
+      sub(this.duration);
+    });
+  }
+
+  subscribe(e: EventType, callback: DurationChangeListener) {
+    if (e === EventType.DurationChange) {
+      this.durationChangeListeners.push(callback);
+    }
+  }
+
+  unsubscribe(e: EventType, callback: DurationChangeListener) {
+    if (e === EventType.DurationChange) {
+      const callbackIdx = this.durationChangeListeners.indexOf(callback);
+      this.durationChangeListeners.splice(callbackIdx, 1);
     }
   }
 
@@ -131,10 +148,7 @@ class Minesweeper {
    * Reset game.
    */
   reset(): Progress {
-    this.duration = 0;
-    if (this.onDurationChange) {
-      this.onDurationChange(this.duration);
-    }
+    this.setDuration(0);
     this.revealedAreaCount = 0;
     this.sleep();
 
@@ -318,4 +332,5 @@ class Minesweeper {
 }
 
 export default Minesweeper;
+export { EventType };
 export type { Progress, Coordinate, Field, Status };

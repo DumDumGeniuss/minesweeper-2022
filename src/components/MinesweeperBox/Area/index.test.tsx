@@ -76,7 +76,7 @@ describe('Area', () => {
         onClick={onClick}
       />
     );
-    const button = container.querySelector('button');
+    const button = container.querySelector('[aria-label="Reveal area"]');
     if (button) {
       fireEvent.click(button);
     }

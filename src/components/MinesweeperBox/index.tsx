@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, memo } from 'react';
-import Minesweeper, { Field, Status } from '@/lib/minesweeper';
+import Minesweeper, { Field, Status, EventType } from '@/lib/minesweeper';
 import WrapperComp from './Wrapper';
 import PanelComp, { Status as PanelStatus } from './Panel';
 import MinefieldComp, { Minefield } from './Minefield';
@@ -79,9 +79,10 @@ const MinesweeperBox = function MinesweeperBox({ size, minesCount }: Props) {
   }, []);
 
   useEffect(() => {
-    const newMs = new Minesweeper(size, minesCount, onDurationChange);
-    const progress = newMs.getProgress();
-    setMinesweeper(newMs);
+    const newMinesweeper = new Minesweeper(size, minesCount);
+    const progress = newMinesweeper.getProgress();
+    newMinesweeper.subscribe(EventType.DurationChange, onDurationChange);
+    setMinesweeper(newMinesweeper);
     setGameDuration(progress.duration);
     setMinefield(converFieldToMinefield(progress.field));
     setGameStatus(convertStatusToPanelStatus(progress.status));

@@ -19,6 +19,20 @@ describe('Panel', () => {
       expect(true).toBe(false);
     }
   });
+  it('Should correctly display mines count.', () => {
+    const onResetClick = jest.fn();
+    render(
+      <Panel
+        status={Status.Started}
+        minesCount={100}
+        duration={1}
+        onResetClick={onResetClick}
+      />
+    );
+    const durationDom = screen.queryByText(100);
+
+    expect(durationDom).toBeInTheDocument();
+  });
   it('Should display correct emoji.', () => {
     const defaultProps: Props = {
       status: Status.Sleeing,
@@ -41,6 +55,20 @@ describe('Panel', () => {
     rerender(<Panel {...defaultProps} status={Status.Started} />);
     faceEmoji = screen.getByText('🙂');
     expect(faceEmoji).toBeInTheDocument();
+  });
+  it('Should correctly display duration.', () => {
+    const onResetClick = jest.fn();
+    render(
+      <Panel
+        status={Status.Started}
+        minesCount={1}
+        duration={100}
+        onResetClick={onResetClick}
+      />
+    );
+    const durationDom = screen.queryByText(100);
+
+    expect(durationDom).toBeInTheDocument();
   });
   it('Should trigger onResetClick.', () => {
     const onResetClick = jest.fn();

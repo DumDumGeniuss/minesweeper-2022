@@ -1,5 +1,5 @@
 import { pause } from '@/utils/common';
-import { Coordinate, Progress } from './types';
+import { Coordinate, Progress, EventType } from './types';
 import Minesweeper, {
   getIncorrectSizeError,
   getTooManyMinesError,
@@ -13,31 +13,20 @@ import { getMinesCount, getCoordOfFirstMatchedArea } from './utils';
 describe('Minesweeper', () => {
   describe('constructor', () => {
     it('Should create new instance with all unrevealed areas.', () => {
-      const game = new Minesweeper({ width: 2, height: 2 }, 1, null);
+      const game = new Minesweeper({ width: 2, height: 2 }, 1);
       const progress: Progress = game.revealArea([0, 0]);
       const minesCount = getMinesCount(progress.field);
       expect(minesCount).toEqual(1);
     });
     it('Should have no mines on initail map.', () => {
-      const game = new Minesweeper({ width: 2, height: 2 }, 1, null);
+      const game = new Minesweeper({ width: 2, height: 2 }, 1);
       const progress = game.getProgress();
       const minesCount = getMinesCount(progress.field);
       expect(minesCount).toBe(0);
     });
-    it('Should periodically call onDurationChange callback.', async () => {
-      const onDurationChange = jest.fn();
-      const game = new Minesweeper(
-        { width: 2, height: 2 },
-        1,
-        onDurationChange
-      );
-      game.revealArea([0, 0]);
-      await pause(2);
-      expect(onDurationChange.mock.calls.length).toBeGreaterThan(0);
-    });
     it('Should throw error when initializing with incorrect size.', () => {
       try {
-        new Minesweeper({ width: -10, height: 30 }, 5, null);
+        new Minesweeper({ width: -10, height: 30 }, 5);
         expect(true).toBe(false);
       } catch (e: any) {
         expect(e.message).toBe(getIncorrectSizeError().message);
@@ -45,7 +34,7 @@ describe('Minesweeper', () => {
     });
     it('Should throw error when initializing with too many mines.', () => {
       try {
-        new Minesweeper({ width: 5, height: 5 }, 26, null);
+        new Minesweeper({ width: 5, height: 5 }, 26);
         expect(true).toBe(false);
       } catch (e: any) {
         expect(e.message).toBe(getTooManyMinesError().message);
@@ -53,7 +42,7 @@ describe('Minesweeper', () => {
     });
     it('Should throw error when mines count is less than 1.', () => {
       try {
-        new Minesweeper({ width: 5, height: 5 }, 0, null);
+        new Minesweeper({ width: 5, height: 5 }, 0);
         expect(true).toBe(false);
       } catch (e: any) {
         expect(e.message).toBe(getIncorrectMinesCountError().message);
@@ -62,7 +51,7 @@ describe('Minesweeper', () => {
   });
   describe('reset', () => {
     it('Should reset game with no mines.', () => {
-      const game = new Minesweeper({ width: 3, height: 3 }, 5, null);
+      const game = new Minesweeper({ width: 3, height: 3 }, 5);
       // Let's reveal area to plant mines.
       let progress: Progress = game.revealArea([0, 0]);
       // Reset game
@@ -74,13 +63,13 @@ describe('Minesweeper', () => {
   });
   describe('revealArea', () => {
     it('Should plant mimnes when first time cliking an area.', () => {
-      const game = new Minesweeper({ width: 3, height: 3 }, 5, null);
+      const game = new Minesweeper({ width: 3, height: 3 }, 5);
       const progress: Progress = game.revealArea([0, 0]);
       const minesCount = getMinesCount(progress.field);
       expect(minesCount).toBe(5);
     });
     it('Should throw error when coordinate is outside border.', () => {
-      const game = new Minesweeper({ width: 3, height: 3 }, 5, null);
+      const game = new Minesweeper({ width: 3, height: 3 }, 5);
       const c: Coordinate = [4, 4];
       try {
         game.revealArea(c);
@@ -89,7 +78,7 @@ describe('Minesweeper', () => {
       }
     });
     it('Should throw error when an area has been revealed.', () => {
-      const game = new Minesweeper({ width: 3, height: 3 }, 4, null);
+      const game = new Minesweeper({ width: 3, height: 3 }, 4);
       const c: Coordinate = [0, 0];
       game.revealArea(c);
       try {
@@ -100,7 +89,7 @@ describe('Minesweeper', () => {
       }
     });
     it('Should throw error when a game has ended and an area is revealed.', () => {
-      const game = new Minesweeper({ width: 3, height: 3 }, 1, null);
+      const game = new Minesweeper({ width: 3, height: 3 }, 1);
       const c: Coordinate = [0, 0];
       const progress: Progress = game.revealArea(c);
       const coord: Coordinate = getCoordOfFirstMatchedArea(progress.field, {
@@ -116,7 +105,7 @@ describe('Minesweeper', () => {
       }
     });
     it('Should reveal the area at the coordinate.', () => {
-      const game = new Minesweeper({ width: 3, height: 3 }, 5, null);
+      const game = new Minesweeper({ width: 3, height: 3 }, 5);
       let progress: Progress = game.getProgress();
       const coord: Coordinate = getCoordOfFirstMatchedArea(progress.field, {
         hasMines: false,
@@ -128,7 +117,7 @@ describe('Minesweeper', () => {
       expect(progress.field[x][y].revealed).toBe(true);
     });
     it('Should end game when clicking a bomb.', () => {
-      const game = new Minesweeper({ width: 3, height: 3 }, 4, null);
+      const game = new Minesweeper({ width: 3, height: 3 }, 4);
       let progress: Progress = game.revealArea([0, 0]);
       const coord = getCoordOfFirstMatchedArea(game.getProgress().field, {
         hasMines: true,
@@ -141,27 +130,44 @@ describe('Minesweeper', () => {
       expect(progress.field[x][y].boomed).toBe(true);
     });
     it('Should set status to "SUCCEED" when all areas without mines have been revealed.', () => {
-      const game = new Minesweeper({ width: 2, height: 1 }, 1, null);
+      const game = new Minesweeper({ width: 2, height: 1 }, 1);
       const progress: Progress = game.revealArea([0, 0]);
 
       expect(progress.status).toBe('SUCCEEDED');
     });
   });
-  describe('revealArea', () => {
-    it('Should clear onDurationChange interval after destroy is called.', async () => {
-      const onDurationChange = jest.fn();
-      const game = new Minesweeper(
-        { width: 2, height: 2 },
-        1,
-        onDurationChange
-      );
+  describe('subscribe', () => {
+    it('Should call durationChange callback when it is subscribed to durationChange event.', async () => {
+      const durationChangeListener = jest.fn();
+      const game = new Minesweeper({ width: 2, height: 2 }, 1);
+      game.subscribe(EventType.DurationChange, durationChangeListener);
       game.revealArea([0, 0]);
-      await pause(2);
-      const tmpCallsCount = onDurationChange.mock.calls.length;
+      await pause(2000);
+      expect(durationChangeListener.mock.calls.length).toBeGreaterThan(0);
+    });
+  });
+  describe('unsubscribe', () => {
+    it('Should unsubscribe a callback when it is unsubscribed to durationChange event.', async () => {
+      const durationChangeListener = jest.fn();
+      const game = new Minesweeper({ width: 2, height: 2 }, 1);
+      game.subscribe(EventType.DurationChange, durationChangeListener);
+      game.revealArea([0, 0]);
+      await pause(1010);
+      const tmpCallsCount = durationChangeListener.mock.calls.length;
+      game.unsubscribe(EventType.DurationChange, durationChangeListener);
+      expect(durationChangeListener.mock.calls.length).toBe(tmpCallsCount);
+    });
+  });
+  describe('destroy', () => {
+    it('Should stop emitting any events after destroy is called.', async () => {
+      const durationChangeListener = jest.fn();
+      const game = new Minesweeper({ width: 2, height: 2 }, 1);
+      game.subscribe(EventType.DurationChange, durationChangeListener);
+      game.revealArea([0, 0]);
+      await pause(1010);
+      const tmpCallsCount = durationChangeListener.mock.calls.length;
       game.destroy();
-      await pause(2);
-
-      expect(tmpCallsCount).toBe(onDurationChange.mock.calls.length);
+      expect(durationChangeListener.mock.calls.length).toBe(tmpCallsCount);
     });
   });
 });
