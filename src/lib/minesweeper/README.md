@@ -34,7 +34,7 @@ Get progress of the game, this will include statue, areas map, etc.
 ## Minesweeper.revealArea()
 
 ```typescript
-revealArea(coord: Coordinate) => Progress
+(coord: Coordinate) => Progress;
 ```
 
 Reveal the area at the given coordiante and return updated game progress, it has 3 possible cases:
@@ -58,10 +58,26 @@ game.revealArea([5, 5]);
 game.revealArea([7, 7]);
 ```
 
+## Minesweeper.subscribe()
+
+```typescript
+(event: EventType, callback: DurationChangeListener) => any;
+```
+
+You can subscribe to any events you want by using usbscribe method, e.g: "durationChange".
+
+## Minesweeper.unsubscribe()
+
+```typescript
+(event: EventType, callback: DurationChangeListener) => any;
+```
+
+You can unsubscribe to any events that you've subscribed.
+
 ## Minesweeper.destroy()
 
 ```typescript
-destroy();
+() => void;
 ```
 
 This will stop all events from beining triggered, e.g: "durationChange".
