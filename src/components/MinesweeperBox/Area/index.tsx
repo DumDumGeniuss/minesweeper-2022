@@ -3,7 +3,7 @@ type UnrevealedAreaAreaProps = {
   y: number;
   flagged: boolean;
   onClick: (x: number, y: number) => any;
-  onContextmenu: (x: number, y: number) => any;
+  onContextMenu: (x: number, y: number) => any;
 };
 
 function UnrevealedArea({
@@ -11,7 +11,7 @@ function UnrevealedArea({
   y,
   flagged,
   onClick,
-  onContextmenu,
+  onContextMenu,
 }: UnrevealedAreaAreaProps) {
   const onButtonClick = () => {
     if (flagged) {
@@ -19,9 +19,9 @@ function UnrevealedArea({
     }
     onClick(x, y);
   };
-  const onButtonContextmenu = (e: React.MouseEvent<Element, MouseEvent>) => {
+  const onButtonContextMenu = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.preventDefault();
-    onContextmenu(x, y);
+    onContextMenu(x, y);
   };
   return (
     <button
@@ -30,7 +30,7 @@ function UnrevealedArea({
       aria-label="Reveal area"
       onClick={onButtonClick}
       onKeyDown={onButtonClick}
-      onContextMenu={onButtonContextmenu}
+      onContextMenu={onButtonContextMenu}
     >
       {flagged ? '🚩' : '🌱'}
     </button>
@@ -97,7 +97,7 @@ type AreaProps = {
   boomed: boolean;
   flagged: boolean;
   onClick: (x: number, y: number) => any;
-  onContextmenu: (x: number, y: number) => any;
+  onContextMenu: (x: number, y: number) => any;
 };
 
 function Area({
@@ -109,7 +109,7 @@ function Area({
   boomed,
   flagged,
   onClick,
-  onContextmenu,
+  onContextMenu,
 }: AreaProps) {
   let AreaComponent: JSX.Element | null = null;
 
@@ -120,7 +120,7 @@ function Area({
         y={y}
         flagged={flagged}
         onClick={onClick}
-        onContextmenu={onContextmenu}
+        onContextMenu={onContextMenu}
       />
     );
   } else if (hasMines) {

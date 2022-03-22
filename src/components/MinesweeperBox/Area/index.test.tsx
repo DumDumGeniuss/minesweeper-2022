@@ -14,7 +14,7 @@ describe('Area', () => {
           boomed={false}
           flagged={false}
           onClick={() => {}}
-          onContextmenu={() => {}}
+          onContextMenu={() => {}}
         />
       );
 
@@ -34,7 +34,7 @@ describe('Area', () => {
         boomed={false}
         flagged
         onClick={() => {}}
-        onContextmenu={() => {}}
+        onContextMenu={() => {}}
       />
     );
     expect(screen.getByText('🚩')).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe('Area', () => {
         boomed={false}
         flagged={false}
         onClick={() => {}}
-        onContextmenu={() => {}}
+        onContextMenu={() => {}}
       />
     );
     expect(screen.getByText('💣')).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe('Area', () => {
         boomed={false}
         flagged={false}
         onClick={() => {}}
-        onContextmenu={() => {}}
+        onContextMenu={() => {}}
       />
     );
     expect(screen.getByText('7')).toBeInTheDocument();
@@ -82,7 +82,7 @@ describe('Area', () => {
         boomed
         flagged={false}
         onClick={() => {}}
-        onContextmenu={() => {}}
+        onContextMenu={() => {}}
       />
     );
     expect(screen.getByText('💥')).toBeInTheDocument();
@@ -99,7 +99,7 @@ describe('Area', () => {
         boomed={false}
         flagged={false}
         onClick={onClick}
-        onContextmenu={() => {}}
+        onContextMenu={() => {}}
       />
     );
     const button = container.querySelector('[aria-label="Reveal area"]');
@@ -121,7 +121,7 @@ describe('Area', () => {
         boomed={false}
         flagged
         onClick={onClick}
-        onContextmenu={() => {}}
+        onContextMenu={() => {}}
       />
     );
     const button = container.querySelector('[aria-label="Reveal area"]');
@@ -131,7 +131,7 @@ describe('Area', () => {
 
     expect(onClick.mock.calls.length).toBe(0);
   });
-  it('Should trigger onContextmenu when Area is right clicked.', () => {
+  it('Should trigger onContextMenu when Area is right clicked.', () => {
     const onClick = jest.fn();
     const { container } = render(
       <Area
@@ -143,7 +143,7 @@ describe('Area', () => {
         boomed={false}
         flagged
         onClick={onClick}
-        onContextmenu={() => {}}
+        onContextMenu={() => {}}
       />
     );
     const button = container.querySelector('[aria-label="Reveal area"]');

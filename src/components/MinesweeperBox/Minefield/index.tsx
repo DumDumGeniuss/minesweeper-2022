@@ -17,12 +17,18 @@ export type Minefield = {
 type Props = {
   minefield: Minefield;
   onAreaClick: (x: number, y: number) => any;
-  onAreaContextmenu: (x: number, y: number) => any;
+  onAreaContextMenu: (x: number, y: number) => any;
 };
 
-function Minefeild({ minefield, onAreaClick, onAreaContextmenu }: Props) {
+function Minefeild({ minefield, onAreaClick, onAreaContextMenu }: Props) {
+  const onContextMenu = (e: React.MouseEvent<Element, MouseEvent>) => {
+    e.preventDefault();
+  };
   return (
-    <section className="flex flex-row rounded-lg overflow-hidden bg-slate-200 p-2">
+    <section
+      onContextMenu={onContextMenu}
+      className="flex flex-row rounded-lg overflow-hidden bg-slate-200 p-2"
+    >
       {minefield.map((areas, x, areasList) => (
         <section
           key={areas[0].x}
@@ -52,7 +58,7 @@ function Minefeild({ minefield, onAreaClick, onAreaContextmenu }: Props) {
                 boomed={area.boomed}
                 flagged={area.flagged}
                 onClick={onAreaClick}
-                onContextmenu={onAreaContextmenu}
+                onContextMenu={onAreaContextMenu}
               />
             </section>
           ))}

@@ -66,7 +66,7 @@ const MinesweeperBox = function MinesweeperBox({ size, minesCount }: Props) {
     [minesweeper]
   );
 
-  const onAreaContextmenu = useCallback(
+  const onAreaContextMenu = useCallback(
     (x: number, y: number): any => {
       if (!minesweeper) {
         return;
@@ -126,7 +126,7 @@ const MinesweeperBox = function MinesweeperBox({ size, minesCount }: Props) {
         <MemoMinefieldComp
           minefield={minefield}
           onAreaClick={onAreaClick}
-          onAreaContextmenu={onAreaContextmenu}
+          onAreaContextMenu={onAreaContextMenu}
         />
       }
     />
