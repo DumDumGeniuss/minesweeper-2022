@@ -219,10 +219,11 @@ class Minesweeper {
       if (!visitedMap[coordKey]) {
         visitedMap[coordKey] = true;
 
-        if (!this.field[x][y].hasMines && !this.field[x][y].revealed) {
+        const { hasMines, revealed, flagged, adjMinesCount } = this.field[x][y];
+        if (!hasMines && !revealed && !flagged) {
           this.setAreaRevealed([x, y]);
 
-          if (this.field[x][y].adjMinesCount === 0) {
+          if (adjMinesCount === 0) {
             for (let i = x - 1; i <= x + 1; i += 1) {
               for (let j = y - 1; j <= y + 1; j += 1) {
                 const isCenterCoord = i === x && j === y;
@@ -355,9 +356,9 @@ class Minesweeper {
     while (plantedMinesCount < this.minesCount) {
       const x: number = Math.floor(Math.random() * this.size.width);
       const y: number = Math.floor(Math.random() * this.size.height);
-      const { hasMines, revealed, flagged } = this.field[x][y];
+      const { hasMines, revealed } = this.field[x][y];
       const isExcludedCoord = x === excludedX && y === excludedY;
-      if (!isExcludedCoord && !hasMines && !revealed && !flagged) {
+      if (!isExcludedCoord && !hasMines && !revealed) {
         this.plantMine([x, y]);
         plantedMinesCount += 1;
       }
