@@ -1,5 +1,6 @@
-import { useEffect, useState, useCallback, memo } from 'react';
-import Minesweeper, { Field, Status, EventType } from '@/lib/minesweeper';
+import { memo } from 'react';
+import { Field, Status } from '@/lib/minesweeper';
+import useMinesweeper from '@/hooks/useMinesweeper';
 import WrapperComp from './Wrapper';
 import PanelComp, { Status as PanelStatus } from './Panel';
 import MinefieldComp, { Minefield } from './Minefield';
@@ -49,74 +50,23 @@ type Props = {
 const MemoMinefieldComp = memo(MinefieldComp);
 
 const MinesweeperBox = function MinesweeperBox({ size, minesCount }: Props) {
-  const [minesweeper, setMinesweeper] = useState<Minesweeper | null>(null);
-  const [minefield, setMinefield] = useState<Minefield>([]);
-  const [gameDuration, setGameDuration] = useState<number>(0);
-  const [gameStatus, setGameStatus] = useState<PanelStatus>(0);
+  const [
+    gameField,
+    gameDuration,
+    gameStatus,
+    onAreaClick,
+    onAreaContextMenu,
+    onResetClick,
+  ] = useMinesweeper(size, minesCount);
 
-  const onAreaClick = useCallback(
-    (x: number, y: number): any => {
-      if (!minesweeper) {
-        return;
-      }
-      const progress = minesweeper.revealArea([x, y]);
-      setMinefield(converFieldToMinefield(progress.field));
-      setGameStatus(convertStatusToPanelStatus(progress.status));
-    },
-    [minesweeper]
-  );
-
-  const onAreaContextMenu = useCallback(
-    (x: number, y: number): any => {
-      if (!minesweeper) {
-        return;
-      }
-      let progress = minesweeper.getProgress();
-      const { flagged } = progress.field[x][y];
-      if (flagged) {
-        progress = minesweeper.unflagArea([x, y]);
-      } else {
-        progress = minesweeper.flagArea([x, y]);
-      }
-      setMinefield(converFieldToMinefield(progress.field));
-    },
-    [minesweeper]
-  );
-
-  const onResetClick = useCallback(() => {
-    if (!minesweeper) {
-      return;
-    }
-    const progress = minesweeper.reset();
-    setMinefield(converFieldToMinefield(progress.field));
-    setGameStatus(convertStatusToPanelStatus(progress.status));
-  }, [minesweeper]);
-
-  const onDurationChange = useCallback((d: number) => {
-    setGameDuration(d);
-  }, []);
-
-  useEffect(() => {
-    const newMinesweeper = new Minesweeper(size, minesCount);
-    const progress = newMinesweeper.getProgress();
-    newMinesweeper.subscribe(EventType.DurationChange, onDurationChange);
-    setMinesweeper(newMinesweeper);
-    setGameDuration(progress.duration);
-    setMinefield(converFieldToMinefield(progress.field));
-    setGameStatus(convertStatusToPanelStatus(progress.status));
-
-    return () => {
-      if (minesweeper) {
-        minesweeper.destroy();
-      }
-    };
-  }, [size, minesCount]);
+  const panelState: PanelStatus = convertStatusToPanelStatus(gameStatus);
+  const minefield: Minefield = converFieldToMinefield(gameField);
 
   return (
     <WrapperComp
       panel={
         <PanelComp
-          status={gameStatus}
+          status={panelState}
           minesCount={minesCount}
           duration={gameDuration}
           onResetClick={onResetClick}
