@@ -11,14 +11,16 @@ export type Minefield = {
   hasMines: boolean;
   adjMinesCount: number;
   boomed: boolean;
+  flagged: boolean;
 }[][];
 
 type Props = {
   minefield: Minefield;
   onAreaClick: (x: number, y: number) => any;
+  onAreaContextmenu: (x: number, y: number) => any;
 };
 
-function Minefeild({ minefield, onAreaClick }: Props) {
+function Minefeild({ minefield, onAreaClick, onAreaContextmenu }: Props) {
   return (
     <section className="flex flex-row rounded-lg overflow-hidden bg-slate-200 p-2">
       {minefield.map((areas, x, areasList) => (
@@ -42,13 +44,15 @@ function Minefeild({ minefield, onAreaClick }: Props) {
               ])}
             >
               <MemoArea
+                x={area.x}
+                y={area.y}
                 revealed={area.revealed}
                 adjMinesCount={area.adjMinesCount}
                 hasMines={area.hasMines}
                 boomed={area.boomed}
-                x={area.x}
-                y={area.y}
+                flagged={area.flagged}
                 onClick={onAreaClick}
+                onContextmenu={onAreaContextmenu}
               />
             </section>
           ))}

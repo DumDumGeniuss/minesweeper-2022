@@ -10,6 +10,7 @@ export type Area = {
   adjMinesCount: number;
   revealed: boolean;
   boomed: boolean;
+  flagged: boolean;
   coord: Coordinate;
 };
 

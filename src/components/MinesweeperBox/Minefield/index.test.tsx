@@ -4,7 +4,13 @@ import Minefeild, { Minefield } from '.';
 describe('Minefield', () => {
   it('Should render component successfully.', () => {
     try {
-      render(<Minefeild minefield={[]} onAreaClick={() => {}} />);
+      render(
+        <Minefeild
+          minefield={[]}
+          onAreaClick={() => {}}
+          onAreaContextmenu={() => {}}
+        />
+      );
 
       expect(true).toBe(true);
     } catch (e) {
@@ -21,6 +27,7 @@ describe('Minefield', () => {
           adjMinesCount: 1,
           revealed: false,
           boomed: false,
+          flagged: false,
         },
         {
           x: 0,
@@ -29,11 +36,16 @@ describe('Minefield', () => {
           adjMinesCount: 0,
           revealed: false,
           boomed: false,
+          flagged: false,
         },
       ],
     ];
     const { container } = render(
-      <Minefeild minefield={minefield} onAreaClick={() => {}} />
+      <Minefeild
+        minefield={minefield}
+        onAreaClick={() => {}}
+        onAreaContextmenu={() => {}}
+      />
     );
 
     const reavealAreaButtons = container.querySelectorAll(

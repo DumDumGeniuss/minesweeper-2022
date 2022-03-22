@@ -7,6 +7,8 @@ import Minesweeper, {
   getOutsideBorderError,
   getHasBeenRevealedError,
   getGameHasEndedError,
+  getHasBeenFlaggedError,
+  getHasNotBeenFlaggedError,
 } from '.';
 import { getMinesCount, getCoordOfFirstMatchedArea } from './utils';
 
@@ -134,6 +136,55 @@ describe('Minesweeper', () => {
       const progress: Progress = game.revealArea([0, 0]);
 
       expect(progress.status).toBe('SUCCEEDED');
+    });
+  });
+  describe('flagArea', () => {
+    it('Should set flagged of the area at the coordinate to true.', () => {
+      const [x, y]: Coordinate = [0, 0];
+      const game = new Minesweeper({ width: 3, height: 3 }, 5);
+      const progress: Progress = game.flagArea([x, y]);
+      expect(progress.field[x][y].flagged).toBe(true);
+    });
+    it('Should trigger an error saying this area has been revealed.', () => {
+      const [x, y]: Coordinate = [0, 0];
+      const game = new Minesweeper({ width: 3, height: 3 }, 5);
+      game.revealArea([x, y]);
+      try {
+        game.flagArea([x, y]);
+        expect(false).toBe(false);
+      } catch (e: any) {
+        expect(e.message).toBe(getHasBeenRevealedError([x, y]).message);
+      }
+    });
+    it('Should trigger an error saying this area has been flagged.', () => {
+      const [x, y]: Coordinate = [0, 0];
+      const game = new Minesweeper({ width: 3, height: 3 }, 5);
+      game.flagArea([x, y]);
+      try {
+        game.flagArea([x, y]);
+        expect(true).toBe(false);
+      } catch (e: any) {
+        expect(e.message).toBe(getHasBeenFlaggedError([x, y]).message);
+      }
+    });
+  });
+  describe('flagArea', () => {
+    it('Should set flagged from the area at the coordinate to false.', () => {
+      const [x, y]: Coordinate = [0, 0];
+      const game = new Minesweeper({ width: 3, height: 3 }, 5);
+      game.flagArea([x, y]);
+      const progress: Progress = game.unflagArea([x, y]);
+      expect(progress.field[0][0].flagged).toBe(false);
+    });
+    it('Should trigger an error saying this area has been flagged.', () => {
+      const [x, y]: Coordinate = [0, 0];
+      const game = new Minesweeper({ width: 3, height: 3 }, 5);
+      try {
+        game.unflagArea([x, y]);
+        expect(true).toBe(false);
+      } catch (e: any) {
+        expect(e.message).toBe(getHasNotBeenFlaggedError([x, y]).message);
+      }
     });
   });
   describe('subscribe', () => {

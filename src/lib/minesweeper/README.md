@@ -58,6 +58,22 @@ game.revealArea([5, 5]);
 game.revealArea([7, 7]);
 ```
 
+## Minesweeper.flagArea()
+
+```typescript
+(coord: Coordinate) => Progress;
+```
+
+Put a flag on the area, when area is flagged, you cannot reveal the area.
+
+## Minesweeper.unflagArea()
+
+```typescript
+(coord: Coordinate) => Progress;
+```
+
+Remove a flag from the area, you can only call this method when there's a flag.
+
 ## Minesweeper.subscribe()
 
 ```typescript

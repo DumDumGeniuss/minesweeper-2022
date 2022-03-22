@@ -12,7 +12,9 @@ describe('Area', () => {
           hasMines={false}
           adjMinesCount={0}
           boomed={false}
+          flagged={false}
           onClick={() => {}}
+          onContextmenu={() => {}}
         />
       );
 
@@ -20,6 +22,22 @@ describe('Area', () => {
     } catch (e) {
       expect(true).toBe(false);
     }
+  });
+  it('Should has a flag emoji when an area is flagged.', () => {
+    render(
+      <Area
+        x={0}
+        y={0}
+        revealed={false}
+        hasMines={false}
+        adjMinesCount={0}
+        boomed={false}
+        flagged
+        onClick={() => {}}
+        onContextmenu={() => {}}
+      />
+    );
+    expect(screen.getByText('🚩')).toBeInTheDocument();
   });
   it('Should has bomb emoji when an area with mine is revealed.', () => {
     render(
@@ -30,7 +48,9 @@ describe('Area', () => {
         hasMines
         adjMinesCount={0}
         boomed={false}
+        flagged={false}
         onClick={() => {}}
+        onContextmenu={() => {}}
       />
     );
     expect(screen.getByText('💣')).toBeInTheDocument();
@@ -44,7 +64,9 @@ describe('Area', () => {
         hasMines={false}
         adjMinesCount={7}
         boomed={false}
+        flagged={false}
         onClick={() => {}}
+        onContextmenu={() => {}}
       />
     );
     expect(screen.getByText('7')).toBeInTheDocument();
@@ -58,7 +80,9 @@ describe('Area', () => {
         hasMines
         adjMinesCount={3}
         boomed
+        flagged={false}
         onClick={() => {}}
+        onContextmenu={() => {}}
       />
     );
     expect(screen.getByText('💥')).toBeInTheDocument();
@@ -73,7 +97,9 @@ describe('Area', () => {
         hasMines={false}
         adjMinesCount={3}
         boomed={false}
+        flagged={false}
         onClick={onClick}
+        onContextmenu={() => {}}
       />
     );
     const button = container.querySelector('[aria-label="Reveal area"]');
@@ -82,5 +108,49 @@ describe('Area', () => {
     }
 
     expect(onClick.mock.calls.length).toBe(1);
+  });
+  it('Should not trigger onClick when Area is flagged.', () => {
+    const onClick = jest.fn();
+    const { container } = render(
+      <Area
+        x={1}
+        y={1}
+        revealed={false}
+        hasMines={false}
+        adjMinesCount={3}
+        boomed={false}
+        flagged
+        onClick={onClick}
+        onContextmenu={() => {}}
+      />
+    );
+    const button = container.querySelector('[aria-label="Reveal area"]');
+    if (button) {
+      fireEvent.click(button);
+    }
+
+    expect(onClick.mock.calls.length).toBe(0);
+  });
+  it('Should trigger onContextmenu when Area is right clicked.', () => {
+    const onClick = jest.fn();
+    const { container } = render(
+      <Area
+        x={1}
+        y={1}
+        revealed={false}
+        hasMines={false}
+        adjMinesCount={3}
+        boomed={false}
+        flagged
+        onClick={onClick}
+        onContextmenu={() => {}}
+      />
+    );
+    const button = container.querySelector('[aria-label="Reveal area"]');
+    if (button) {
+      fireEvent.contextMenu(button);
+    }
+
+    expect(onClick.mock.calls.length).toBe(0);
   });
 });

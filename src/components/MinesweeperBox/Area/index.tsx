@@ -1,23 +1,38 @@
 type UnrevealedAreaAreaProps = {
   x: number;
   y: number;
+  flagged: boolean;
   onClick: (x: number, y: number) => any;
+  onContextmenu: (x: number, y: number) => any;
 };
 
-function UnrevealedArea({ x, y, onClick }: UnrevealedAreaAreaProps) {
+function UnrevealedArea({
+  x,
+  y,
+  flagged,
+  onClick,
+  onContextmenu,
+}: UnrevealedAreaAreaProps) {
+  const onButtonClick = () => {
+    if (flagged) {
+      return;
+    }
+    onClick(x, y);
+  };
+  const onButtonContextmenu = (e: React.MouseEvent<Element, MouseEvent>) => {
+    e.preventDefault();
+    onContextmenu(x, y);
+  };
   return (
     <button
       className="flex justify-center items-center w-full h-full bg-white hover:bg-slate-100"
       type="button"
       aria-label="Reveal area"
-      onClick={() => {
-        onClick(x, y);
-      }}
-      onKeyDown={() => {
-        onClick(x, y);
-      }}
+      onClick={onButtonClick}
+      onKeyDown={onButtonClick}
+      onContextMenu={onButtonContextmenu}
     >
-      🌱
+      {flagged ? '🚩' : '🌱'}
     </button>
   );
 }
@@ -29,9 +44,13 @@ type MineAreaPoprs = {
 function MineArea({ boomed }: MineAreaPoprs) {
   const bgColor = boomed ? 'bg-red-200' : 'bg-slate-100';
   const emoji = boomed ? '💥' : '💣';
+  const onContextMenu = (e: React.MouseEvent<Element, MouseEvent>) => {
+    e.preventDefault();
+  };
   return (
     <section
       className={`flex w-full h-full justify-center items-center ${bgColor}`}
+      onContextMenu={onContextMenu}
     >
       <section>{emoji}</section>
     </section>
@@ -54,8 +73,14 @@ const countColorMap: { [key: number]: string } = {
 };
 
 function SafeArea({ adjMinesCount }: SafeAreaAreaProps) {
+  const onContextMenu = (e: React.MouseEvent<Element, MouseEvent>) => {
+    e.preventDefault();
+  };
   return (
-    <section className="flex w-full h-full justify-center items-center bg-slate-100">
+    <section
+      onContextMenu={onContextMenu}
+      className="flex w-full h-full justify-center items-center bg-slate-100"
+    >
       <section className={`${countColorMap[adjMinesCount]} font-bold`}>
         {adjMinesCount || ''}
       </section>
@@ -70,7 +95,9 @@ type AreaProps = {
   hasMines: boolean;
   adjMinesCount: number;
   boomed: boolean;
+  flagged: boolean;
   onClick: (x: number, y: number) => any;
+  onContextmenu: (x: number, y: number) => any;
 };
 
 function Area({
@@ -80,12 +107,22 @@ function Area({
   adjMinesCount,
   hasMines,
   boomed,
+  flagged,
   onClick,
+  onContextmenu,
 }: AreaProps) {
   let AreaComponent: JSX.Element | null = null;
 
   if (!revealed) {
-    AreaComponent = <UnrevealedArea x={x} y={y} onClick={onClick} />;
+    AreaComponent = (
+      <UnrevealedArea
+        x={x}
+        y={y}
+        flagged={flagged}
+        onClick={onClick}
+        onContextmenu={onContextmenu}
+      />
+    );
   } else if (hasMines) {
     AreaComponent = <MineArea boomed={boomed} />;
   } else {

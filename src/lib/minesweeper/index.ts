@@ -23,6 +23,12 @@ export const getIncorrectMinesCountError = () =>
 export const getHasBeenRevealedError = (c: Coordinate) =>
   Error(`The area at (${c[0]}, ${c[1]}) has been revealed.`);
 
+export const getHasBeenFlaggedError = (c: Coordinate) =>
+  Error(`The area at (${c[0]}, ${c[1]}) has been flagged.`);
+
+export const getHasNotBeenFlaggedError = (c: Coordinate) =>
+  Error(`The area at (${c[0]}, ${c[1]}) has not been flagged.`);
+
 export const getGameHasEndedError = () => Error('The game has ended.');
 
 class Minesweeper {
@@ -161,6 +167,7 @@ class Minesweeper {
           adjMinesCount: 0,
           revealed: false,
           boomed: false,
+          flagged: false,
           coord: [x, y],
         };
       }
@@ -254,6 +261,9 @@ class Minesweeper {
     if (this.field[x][y].revealed) {
       throw getHasBeenRevealedError(c);
     }
+    if (this.field[x][y].flagged) {
+      throw getHasBeenFlaggedError(c);
+    }
 
     if (this.field[x][y].hasMines) {
       this.revealAreaWithMines(c);
@@ -264,6 +274,54 @@ class Minesweeper {
     } else {
       this.revealAreaWithoutMines(c);
     }
+
+    return this.getProgress();
+  }
+
+  /**
+   * Flag an area.
+   * @param c Coordinate
+   */
+  flagArea(c: Coordinate): Progress {
+    if (this.status === 'FAILED' || this.status === 'SUCCEEDED') {
+      throw getGameHasEndedError();
+    }
+    const [x, y] = c;
+    if (this.isOutsideBorder(c)) {
+      throw getOutsideBorderError(c);
+    }
+    if (this.field[x][y].revealed) {
+      throw getHasBeenRevealedError(c);
+    }
+    if (this.field[x][y].flagged) {
+      throw getHasBeenFlaggedError(c);
+    }
+
+    this.field[x][y].flagged = true;
+
+    return this.getProgress();
+  }
+
+  /**
+   * Unflag an area.
+   * @param c Coordinate
+   */
+  unflagArea(c: Coordinate): Progress {
+    if (this.status === 'FAILED' || this.status === 'SUCCEEDED') {
+      throw getGameHasEndedError();
+    }
+    const [x, y] = c;
+    if (this.isOutsideBorder(c)) {
+      throw getOutsideBorderError(c);
+    }
+    if (this.field[x][y].revealed) {
+      throw getHasBeenRevealedError(c);
+    }
+    if (!this.field[x][y].flagged) {
+      throw getHasNotBeenFlaggedError(c);
+    }
+
+    this.field[x][y].flagged = false;
 
     return this.getProgress();
   }
@@ -297,9 +355,9 @@ class Minesweeper {
     while (plantedMinesCount < this.minesCount) {
       const x: number = Math.floor(Math.random() * this.size.width);
       const y: number = Math.floor(Math.random() * this.size.height);
-      const { hasMines, revealed } = this.field[x][y];
+      const { hasMines, revealed, flagged } = this.field[x][y];
       const isExcludedCoord = x === excludedX && y === excludedY;
-      if (!isExcludedCoord && !hasMines && !revealed) {
+      if (!isExcludedCoord && !hasMines && !revealed && !flagged) {
         this.plantMine([x, y]);
         plantedMinesCount += 1;
       }

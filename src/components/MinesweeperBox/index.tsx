@@ -36,6 +36,7 @@ function converFieldToMinefield(field: Field): Minefield {
       hasMines: area.hasMines,
       adjMinesCount: area.adjMinesCount,
       boomed: area.boomed,
+      flagged: area.flagged,
     }))
   );
 }
@@ -61,6 +62,23 @@ const MinesweeperBox = function MinesweeperBox({ size, minesCount }: Props) {
       const progress = minesweeper.revealArea([x, y]);
       setMinefield(converFieldToMinefield(progress.field));
       setGameStatus(convertStatusToPanelStatus(progress.status));
+    },
+    [minesweeper]
+  );
+
+  const onAreaContextmenu = useCallback(
+    (x: number, y: number): any => {
+      if (!minesweeper) {
+        return;
+      }
+      let progress = minesweeper.getProgress();
+      const { flagged } = progress.field[x][y];
+      if (flagged) {
+        progress = minesweeper.unflagArea([x, y]);
+      } else {
+        progress = minesweeper.flagArea([x, y]);
+      }
+      setMinefield(converFieldToMinefield(progress.field));
     },
     [minesweeper]
   );
@@ -105,7 +123,11 @@ const MinesweeperBox = function MinesweeperBox({ size, minesCount }: Props) {
         />
       }
       minefield={
-        <MemoMinefieldComp minefield={minefield} onAreaClick={onAreaClick} />
+        <MemoMinefieldComp
+          minefield={minefield}
+          onAreaClick={onAreaClick}
+          onAreaContextmenu={onAreaContextmenu}
+        />
       }
     />
   );
