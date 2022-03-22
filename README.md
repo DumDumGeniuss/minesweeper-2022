@@ -32,6 +32,10 @@ This is a React component in charge of rending the UI for users to interact with
 
 Check here for details [MinesweeperBox](https://github.com/DumDumGeniuss/minesweeper-2022/blob/main/src/components/MinesweeperBox/README.md).
 
+### Diagram
+
+![Diagram](https://github.com/DumDumGeniuss/minesweeper-2022/blob/main/doc/diagram.jpg)
+
 ## Commands
 
 ### Installation
