@@ -392,4 +392,4 @@ class Minesweeper {
 
 export default Minesweeper;
 export { EventType };
-export type { Progress, Coordinate, Field, Status };
+export type { Size, Progress, Coordinate, Field, Status };
