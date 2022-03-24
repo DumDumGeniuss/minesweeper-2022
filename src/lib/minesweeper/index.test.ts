@@ -206,6 +206,7 @@ describe('Minesweeper', () => {
       await pause(1010);
       const tmpCallsCount = durationChangeListener.mock.calls.length;
       game.unsubscribe(EventType.DurationChange, durationChangeListener);
+      await pause(1010);
       expect(durationChangeListener.mock.calls.length).toBe(tmpCallsCount);
     });
   });
@@ -218,6 +219,7 @@ describe('Minesweeper', () => {
       await pause(1010);
       const tmpCallsCount = durationChangeListener.mock.calls.length;
       game.destroy();
+      await pause(1010);
       expect(durationChangeListener.mock.calls.length).toBe(tmpCallsCount);
     });
   });
