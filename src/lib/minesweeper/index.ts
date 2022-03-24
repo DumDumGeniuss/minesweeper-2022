@@ -29,7 +29,7 @@ export const getHasBeenFlaggedError = (c: Coordinate) =>
 export const getHasNotBeenFlaggedError = (c: Coordinate) =>
   Error(`The area at (${c[0]}, ${c[1]}) has not been flagged.`);
 
-export const getGameHasEndedError = () => Error('The game has ended.');
+export const getGameHasEndedError = () => Error('The game has ended.   ');
 
 class Minesweeper {
   private field: Field = [];
