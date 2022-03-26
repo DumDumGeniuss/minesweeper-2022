@@ -6,9 +6,10 @@ import redTheme from './themes/red';
 import greenTheme from './themes/green';
 import emeraldTheme from './themes/emerald';
 import indigoTheme from './themes/indigo';
-import { Palette, Theme, ThemeColor } from './types';
+import grayTheme from './themes/gray';
+import { PaletteGroup, Palette, Theme } from './types';
 
-const palette: Palette = {
+const paletteGroup: PaletteGroup = {
   sky: skyTheme,
   purple: purpleTheme,
   amber: amberTheme,
@@ -16,9 +17,10 @@ const palette: Palette = {
   green: greenTheme,
   emerald: emeraldTheme,
   indigo: indigoTheme,
+  gray: grayTheme,
 };
 
-const MinesweeperBoxPaletteContext = createContext(palette.green);
+const MinesweeperBoxPaletteContext = createContext(paletteGroup.green);
 export default MinesweeperBoxPaletteContext;
-export { palette, ThemeColor };
-export type { Theme };
+export { paletteGroup, Theme };
+export type { Palette };

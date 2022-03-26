@@ -1,6 +1,6 @@
-import { Theme } from '../types';
+import { Palette } from '../types';
 
-const theme: Theme = {
+const theme: Palette = {
   panel: {
     sidePanel: {
       bgColor: 'bg-indigo-100',

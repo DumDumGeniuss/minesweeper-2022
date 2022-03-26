@@ -1,4 +1,4 @@
-enum ThemeColor {
+enum Theme {
   Sky = 'sky',
   Purple = 'purple',
   Amber = 'amber',
@@ -6,9 +6,10 @@ enum ThemeColor {
   Green = 'green',
   Emerald = 'emerald',
   Indigo = 'indigo',
+  Gray = 'gray',
 }
 
-type Theme = {
+type Palette = {
   panel: {
     sidePanel: {
       bgColor: string;
@@ -55,9 +56,9 @@ type Theme = {
   };
 };
 
-type Palette = {
-  [key in ThemeColor]: Theme;
+type PaletteGroup = {
+  [key in Theme]: Palette;
 };
 
-export { ThemeColor };
-export type { Theme, Palette };
+export { Theme };
+export type { Palette, PaletteGroup };

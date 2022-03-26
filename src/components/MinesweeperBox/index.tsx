@@ -4,7 +4,7 @@ import useMinesweeper from '@/hooks/useMinesweeper';
 import WrapperComp from './Wrapper';
 import PanelComp, { Status as PanelStatus } from './Panel';
 import MinefieldComp, { Minefield } from './Minefield';
-import PaletteContext, { palette, ThemeColor } from './PaletteContext';
+import PaletteContext, { paletteGroup, Theme } from './PaletteContext';
 
 /**
  * Convert Status in minesweeper to PanelStatus used in Panel Component.
@@ -46,7 +46,7 @@ function converFieldToMinefield(field: Field): Minefield {
 type Props = {
   size: { width: number; height: number };
   minesCount: number;
-  themeColor: ThemeColor;
+  theme: Theme;
 };
 
 const MemoMinefieldComp = memo(MinefieldComp);
@@ -54,7 +54,7 @@ const MemoMinefieldComp = memo(MinefieldComp);
 const MinesweeperBox = function MinesweeperBox({
   size,
   minesCount,
-  themeColor,
+  theme,
 }: Props) {
   const [
     gameField,
@@ -69,7 +69,7 @@ const MinesweeperBox = function MinesweeperBox({
   const minefield: Minefield = converFieldToMinefield(gameField);
 
   return (
-    <PaletteContext.Provider value={palette[themeColor]}>
+    <PaletteContext.Provider value={paletteGroup[theme]}>
       <WrapperComp
         panel={
           <PanelComp
@@ -93,4 +93,4 @@ const MinesweeperBox = function MinesweeperBox({
 
 export default MinesweeperBox;
 
-export { ThemeColor };
+export { Theme };

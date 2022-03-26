@@ -1,11 +1,11 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import MinesweeperBox, { ThemeColor } from '.';
+import MinesweeperBox, { Theme } from '.';
 
 describe('MinesweeperBox', () => {
   it('Should render component successfully.', () => {
     render(
       <MinesweeperBox
-        themeColor={ThemeColor.Sky}
+        theme={Theme.Sky}
         size={{ width: 10, height: 10 }}
         minesCount={10}
       />
@@ -17,7 +17,7 @@ describe('MinesweeperBox', () => {
   it('Should start the game when any areas are clicked.', () => {
     const { container } = render(
       <MinesweeperBox
-        themeColor={ThemeColor.Sky}
+        theme={Theme.Sky}
         size={{ width: 10, height: 10 }}
         minesCount={10}
       />
@@ -33,7 +33,7 @@ describe('MinesweeperBox', () => {
   it('Should reset the game when reset game button is clicked.', () => {
     const { container } = render(
       <MinesweeperBox
-        themeColor={ThemeColor.Sky}
+        theme={Theme.Sky}
         size={{ width: 10, height: 10 }}
         minesCount={10}
       />
@@ -56,14 +56,14 @@ describe('MinesweeperBox', () => {
   it('Should renew the game when size or minesCount is changes.', () => {
     const { rerender, container } = render(
       <MinesweeperBox
-        themeColor={ThemeColor.Sky}
+        theme={Theme.Sky}
         size={{ width: 10, height: 10 }}
         minesCount={10}
       />
     );
     rerender(
       <MinesweeperBox
-        themeColor={ThemeColor.Sky}
+        theme={Theme.Sky}
         size={{ width: 20, height: 10 }}
         minesCount={33}
       />
