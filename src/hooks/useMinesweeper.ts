@@ -4,6 +4,7 @@ import Minesweeper, { Size, Field, Status, EventType } from '@/lib/minesweeper';
 type ReturnType = [
   Field,
   number,
+  number,
   Status,
   (x: number, y: number) => any,
   (x: number, y: number) => any,
@@ -18,6 +19,7 @@ export default function useMinesweeper(
   );
   const [minefield, setMinefield] = useState<Field>([]);
   const [gameDuration, setGameDuration] = useState<number>(0);
+  const [gameFlagsCount, setGameFlagsCount] = useState<number>(0);
   const [gameStatus, setGameStatus] = useState<Status>('SLEEPING');
 
   const onAreaClick = useCallback(
@@ -39,12 +41,15 @@ export default function useMinesweeper(
         progress = minesweeper.flagArea([x, y]);
       }
       setMinefield(progress.field);
+      setGameFlagsCount(progress.flagsCount);
     },
     [minesweeper]
   );
 
   const onResetClick = useCallback(() => {
     const progress = minesweeper.reset();
+    setGameDuration(progress.duration);
+    setGameFlagsCount(progress.flagsCount);
     setMinefield(progress.field);
     setGameStatus(progress.status);
   }, [minesweeper]);
@@ -59,6 +64,7 @@ export default function useMinesweeper(
     newMinesweeper.subscribe(EventType.DurationChange, onDurationChange);
     setMinesweeper(newMinesweeper);
     setGameDuration(progress.duration);
+    setGameFlagsCount(progress.flagsCount);
     setMinefield(progress.field);
     setGameStatus(progress.status);
 
@@ -70,6 +76,7 @@ export default function useMinesweeper(
   return [
     minefield,
     gameDuration,
+    gameFlagsCount,
     gameStatus,
     onAreaClick,
     onAreaContextMenu,

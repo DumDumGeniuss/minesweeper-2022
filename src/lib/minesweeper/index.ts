@@ -36,6 +36,8 @@ class Minesweeper {
 
   private minesCount: number = 0;
 
+  private flagsCount: number = 0;
+
   private revealedAreaCount: number = 0;
 
   private size: Size = { width: 0, height: 0 };
@@ -156,6 +158,7 @@ class Minesweeper {
   reset(): Progress {
     this.setDuration(0);
     this.revealedAreaCount = 0;
+    this.flagsCount = 0;
     this.sleep();
 
     this.field = [];
@@ -185,6 +188,7 @@ class Minesweeper {
       field: [...this.field],
       status: this.status,
       minesCount: this.minesCount,
+      flagsCount: this.flagsCount,
       size: this.size,
       duration: this.duration,
     };
@@ -299,6 +303,7 @@ class Minesweeper {
     }
 
     this.field[x][y].flagged = true;
+    this.flagsCount += 1;
 
     return this.getProgress();
   }
@@ -323,6 +328,7 @@ class Minesweeper {
     }
 
     this.field[x][y].flagged = false;
+    this.flagsCount -= 1;
 
     return this.getProgress();
   }

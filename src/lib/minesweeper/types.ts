@@ -29,6 +29,7 @@ export type Progress = {
   field: Field;
   status: Status;
   minesCount: number;
+  flagsCount: number;
   size: Size;
   duration: number;
 };

@@ -9,6 +9,7 @@ describe('Panel', () => {
         <Panel
           status={Status.Sleeing}
           minesCount={1}
+          flagsCount={0}
           duration={0}
           onResetClick={onResetClick}
         />
@@ -25,11 +26,12 @@ describe('Panel', () => {
       <Panel
         status={Status.Started}
         minesCount={100}
+        flagsCount={10}
         duration={1}
         onResetClick={onResetClick}
       />
     );
-    const durationDom = screen.queryByText(100);
+    const durationDom = screen.queryByText(90);
 
     expect(durationDom).toBeInTheDocument();
   });
@@ -37,6 +39,7 @@ describe('Panel', () => {
     const defaultProps: Props = {
       status: Status.Sleeing,
       minesCount: 1,
+      flagsCount: 0,
       duration: 0,
       onResetClick: () => {},
     };
@@ -62,6 +65,7 @@ describe('Panel', () => {
       <Panel
         status={Status.Started}
         minesCount={1}
+        flagsCount={0}
         duration={100}
         onResetClick={onResetClick}
       />
@@ -76,6 +80,7 @@ describe('Panel', () => {
       <Panel
         status={Status.Started}
         minesCount={1}
+        flagsCount={0}
         duration={0}
         onResetClick={onResetClick}
       />

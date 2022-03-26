@@ -59,6 +59,7 @@ const MinesweeperBox = function MinesweeperBox({
   const [
     gameField,
     gameDuration,
+    gameFlagsCount,
     gameStatus,
     onAreaClick,
     onAreaContextMenu,
@@ -74,6 +75,7 @@ const MinesweeperBox = function MinesweeperBox({
         panel={
           <PanelComp
             status={panelState}
+            flagsCount={gameFlagsCount}
             minesCount={minesCount}
             duration={gameDuration}
             onResetClick={onResetClick}

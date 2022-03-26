@@ -12,6 +12,7 @@ export enum Status {
 export type Props = {
   status: Status;
   minesCount: number;
+  flagsCount: number;
   duration: number;
   onResetClick: () => any;
 };
@@ -19,6 +20,7 @@ export type Props = {
 const Panel = function Panel({
   status,
   minesCount,
+  flagsCount,
   duration,
   onResetClick,
 }: Props) {
@@ -41,6 +43,7 @@ const Panel = function Panel({
   const palette = useContext(PaletteContext);
   const sidePanelBgColor = palette.panel.sidePanel.bgColor;
   const resetButtonBgColor = palette.panel.resetButton.bgColorHover;
+  const minesCountLeft = minesCount - flagsCount;
 
   return (
     <section
@@ -66,7 +69,7 @@ const Panel = function Panel({
         ])}
       >
         <section>💣</section>
-        <section>{minesCount.toString(10)}</section>
+        <section>{minesCountLeft.toString(10)}</section>
       </section>
       <button
         className={classnames([
