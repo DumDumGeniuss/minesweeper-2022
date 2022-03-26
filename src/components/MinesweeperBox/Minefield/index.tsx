@@ -27,9 +27,9 @@ function Minefeild({ minefield, onAreaClick, onAreaContextMenu }: Props) {
   return (
     <section
       onContextMenu={onContextMenu}
-      className="flex flex-row rounded-lg overflow-hidden bg-slate-200 p-2"
+      className="flex flex-row rounded-lg overflow-hidden"
     >
-      {minefield.map((areas, x, areasList) => (
+      {minefield.map((areas) => (
         <section
           key={areas[0].x}
           className={classnames([
@@ -37,17 +37,12 @@ function Minefeild({ minefield, onAreaClick, onAreaContextMenu }: Props) {
             'flex-col',
             'justify-center',
             'items-center',
-            areasList.length - 1 === x ? '' : 'mr-1',
           ])}
         >
-          {areas.map((area, y, areaList) => (
+          {areas.map((area) => (
             <section
               key={`${area.x},${area.y}`}
-              className={classnames([
-                'w-8',
-                'h-8',
-                areaList.length - 1 === y ? '' : 'mb-1',
-              ])}
+              className={classnames(['w-8', 'h-8'])}
             >
               <MemoArea
                 x={area.x}

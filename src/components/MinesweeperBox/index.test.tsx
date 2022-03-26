@@ -1,16 +1,26 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import MinesweeperBox from '.';
+import MinesweeperBox, { ThemeColor } from '.';
 
 describe('MinesweeperBox', () => {
   it('Should render component successfully.', () => {
-    render(<MinesweeperBox size={{ width: 10, height: 10 }} minesCount={10} />);
+    render(
+      <MinesweeperBox
+        themeColor={ThemeColor.Sky}
+        size={{ width: 10, height: 10 }}
+        minesCount={10}
+      />
+    );
     const sleepingFaceDom = screen.getByText('😴');
 
     expect(sleepingFaceDom).toBeInTheDocument();
   });
   it('Should start the game when any areas are clicked.', () => {
     const { container } = render(
-      <MinesweeperBox size={{ width: 10, height: 10 }} minesCount={10} />
+      <MinesweeperBox
+        themeColor={ThemeColor.Sky}
+        size={{ width: 10, height: 10 }}
+        minesCount={10}
+      />
     );
     const revealAreaButtons = container.querySelectorAll(
       '[aria-label="Reveal area"]'
@@ -22,7 +32,11 @@ describe('MinesweeperBox', () => {
   });
   it('Should reset the game when reset game button is clicked.', () => {
     const { container } = render(
-      <MinesweeperBox size={{ width: 10, height: 10 }} minesCount={10} />
+      <MinesweeperBox
+        themeColor={ThemeColor.Sky}
+        size={{ width: 10, height: 10 }}
+        minesCount={10}
+      />
     );
     const revealAreaButtons = container.querySelectorAll(
       '[aria-label="Reveal area"]'
@@ -41,10 +55,18 @@ describe('MinesweeperBox', () => {
   });
   it('Should renew the game when size or minesCount is changes.', () => {
     const { rerender, container } = render(
-      <MinesweeperBox size={{ width: 10, height: 10 }} minesCount={10} />
+      <MinesweeperBox
+        themeColor={ThemeColor.Sky}
+        size={{ width: 10, height: 10 }}
+        minesCount={10}
+      />
     );
     rerender(
-      <MinesweeperBox size={{ width: 20, height: 10 }} minesCount={33} />
+      <MinesweeperBox
+        themeColor={ThemeColor.Sky}
+        size={{ width: 20, height: 10 }}
+        minesCount={33}
+      />
     );
 
     const revealAreaButtons = container.querySelectorAll(

@@ -1,0 +1,50 @@
+import { Theme } from '../types';
+
+const theme: Theme = {
+  panel: {
+    sidePanel: {
+      bgColor: 'bg-indigo-100',
+    },
+    resetButton: {
+      bgColorHover: 'hover:bg-indigo-100',
+    },
+  },
+  wrapper: {
+    bgColor: 'bg-white',
+  },
+  area: {
+    unrevealedArea: {
+      light: {
+        bgColor: 'bg-indigo-200',
+        bgColorHover: 'hover:bg-indigo-400',
+      },
+      dark: {
+        bgColor: 'bg-indigo-300',
+        bgColorHover: 'hover:bg-indigo-500',
+      },
+    },
+    bombArea: {
+      boomed: {
+        bgColor: 'bg-indigo-300',
+      },
+      notBoomed: {
+        light: {
+          bgColor: 'bg-indigo-50',
+        },
+        dark: {
+          bgColor: 'bg-indigo-100',
+        },
+      },
+    },
+    safeArea: {
+      light: {
+        bgColor: 'bg-indigo-50',
+      },
+      dark: {
+        bgColor: 'bg-indigo-100',
+      },
+    },
+  },
+};
+
+export default theme;

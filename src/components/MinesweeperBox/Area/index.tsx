@@ -1,4 +1,9 @@
+import { useContext } from 'react';
+import classnames from 'classnames';
+import PaletteContext from '../PaletteContext';
+
 type UnrevealedAreaAreaProps = {
+  bgColor: 'light' | 'dark';
   x: number;
   y: number;
   flagged: boolean;
@@ -9,6 +14,7 @@ type UnrevealedAreaAreaProps = {
 function UnrevealedArea({
   x,
   y,
+  bgColor,
   flagged,
   onClick,
   onContextMenu,
@@ -23,33 +29,57 @@ function UnrevealedArea({
     e.preventDefault();
     onContextMenu(x, y);
   };
+  const palette = useContext(PaletteContext);
+  const lightBgColor = palette.area.unrevealedArea.light.bgColor;
+  const lightBgColorHover = palette.area.unrevealedArea.light.bgColorHover;
+  const darkBgColor = palette.area.unrevealedArea.dark.bgColor;
+  const darkBgColorHover = palette.area.unrevealedArea.dark.bgColorHover;
   return (
     <button
-      className="flex justify-center items-center w-full h-full bg-white hover:bg-slate-100"
+      className={classnames([
+        'flex',
+        'justify-center',
+        'items-center',
+        'w-full',
+        'h-full',
+        bgColor === 'light' ? lightBgColor : darkBgColor,
+        bgColor === 'light' ? lightBgColorHover : darkBgColorHover,
+      ])}
       type="button"
       aria-label="Reveal area"
       onClick={onButtonClick}
       onKeyDown={onButtonClick}
       onContextMenu={onButtonContextMenu}
     >
-      {flagged ? '🚩' : '🌱'}
+      {flagged ? '🚩' : ''}
     </button>
   );
 }
 
 type MineAreaPoprs = {
+  bgColor: 'light' | 'dark';
   boomed: boolean;
 };
 
-function MineArea({ boomed }: MineAreaPoprs) {
-  const bgColor = boomed ? 'bg-red-200' : 'bg-slate-100';
+function MineArea({ bgColor, boomed }: MineAreaPoprs) {
+  const palette = useContext(PaletteContext);
+  const boomedBgColor = palette.area.bombArea.boomed.bgColor;
+  const notBoomedLightBgColor = palette.area.bombArea.notBoomed.light.bgColor;
+  const notBoomedDarkBgColor = palette.area.bombArea.notBoomed.dark.bgColor;
+  let mineAreaBgColor;
+  if (boomed) {
+    mineAreaBgColor = boomedBgColor;
+  } else {
+    mineAreaBgColor =
+      bgColor === 'light' ? notBoomedLightBgColor : notBoomedDarkBgColor;
+  }
   const emoji = boomed ? '💥' : '💣';
   const onContextMenu = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.preventDefault();
   };
   return (
     <section
-      className={`flex w-full h-full justify-center items-center ${bgColor}`}
+      className={`flex w-full h-full justify-center items-center ${mineAreaBgColor}`}
       onContextMenu={onContextMenu}
     >
       <section>{emoji}</section>
@@ -58,6 +88,7 @@ function MineArea({ boomed }: MineAreaPoprs) {
 }
 
 type SafeAreaAreaProps = {
+  bgColor: 'light' | 'dark';
   adjMinesCount: number;
 };
 
@@ -72,14 +103,25 @@ const countColorMap: { [key: number]: string } = {
   8: 'text-gray-500',
 };
 
-function SafeArea({ adjMinesCount }: SafeAreaAreaProps) {
+function SafeArea({ adjMinesCount, bgColor }: SafeAreaAreaProps) {
   const onContextMenu = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.preventDefault();
   };
+  const palette = useContext(PaletteContext);
+  const lightBgColor = palette.area.safeArea.light.bgColor;
+  const darkBgColor = palette.area.safeArea.dark.bgColor;
+
   return (
     <section
       onContextMenu={onContextMenu}
-      className="flex w-full h-full justify-center items-center bg-slate-100"
+      className={classnames([
+        'flex',
+        'w-full',
+        'h-full',
+        'justify-center',
+        'items-center',
+        bgColor === 'light' ? lightBgColor : darkBgColor,
+      ])}
     >
       <section className={`${countColorMap[adjMinesCount]} font-bold`}>
         {adjMinesCount || ''}
@@ -112,10 +154,12 @@ function Area({
   onContextMenu,
 }: AreaProps) {
   let AreaComponent: JSX.Element | null = null;
+  const bgColor = (x + y) % 2 === 0 ? 'light' : 'dark';
 
   if (!revealed) {
     AreaComponent = (
       <UnrevealedArea
+        bgColor={bgColor}
         x={x}
         y={y}
         flagged={flagged}
@@ -124,15 +168,15 @@ function Area({
       />
     );
   } else if (hasMines) {
-    AreaComponent = <MineArea boomed={boomed} />;
+    AreaComponent = <MineArea bgColor={bgColor} boomed={boomed} />;
   } else {
-    AreaComponent = <SafeArea adjMinesCount={adjMinesCount} />;
+    AreaComponent = (
+      <SafeArea bgColor={bgColor} adjMinesCount={adjMinesCount} />
+    );
   }
 
   return (
-    <section className="w-full h-full rounded-lg overflow-hidden">
-      {AreaComponent}
-    </section>
+    <section className="w-full h-full overflow-hidden">{AreaComponent}</section>
   );
 }
 

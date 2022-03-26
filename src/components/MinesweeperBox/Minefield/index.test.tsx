@@ -8,7 +8,7 @@ describe('Minefield', () => {
         <Minefeild
           minefield={[]}
           onAreaClick={() => {}}
-          onAreaContextmenu={() => {}}
+          onAreaContextMenu={() => {}}
         />
       );
 
@@ -44,7 +44,7 @@ describe('Minefield', () => {
       <Minefeild
         minefield={minefield}
         onAreaClick={() => {}}
-        onAreaContextmenu={() => {}}
+        onAreaContextMenu={() => {}}
       />
     );
 

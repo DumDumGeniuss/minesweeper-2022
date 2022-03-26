@@ -1,3 +1,7 @@
+import { useContext } from 'react';
+import classnames from 'classnames';
+import PaletteContext from '../PaletteContext';
+
 export enum Status {
   Sleeing = 0,
   Started = 1,
@@ -34,22 +38,69 @@ const Panel = function Panel({
       break;
   }
 
+  const palette = useContext(PaletteContext);
+  const sidePanelBgColor = palette.panel.sidePanel.bgColor;
+  const resetButtonBgColor = palette.panel.resetButton.bgColorHover;
+
   return (
-    <section className="flex items-center justify-between h-16 rounded-xl">
-      <section className="flex justify-between items-center w-28 h-10 rounded-lg bg-slate-200 px-4">
+    <section
+      className={classnames([
+        'flex',
+        'items-center',
+        'justify-between',
+        'h-16',
+        'rounded-xl',
+      ])}
+    >
+      <section
+        className={classnames([
+          'flex',
+          'justify-between',
+          'items-center',
+          'w-28',
+          'h-10',
+          'rounded-lg',
+          'px-4',
+          'shadow-inner',
+          sidePanelBgColor,
+        ])}
+      >
         <section>💣</section>
         <section>{minesCount.toString(10)}</section>
       </section>
       <button
-        className="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200"
+        className={classnames([
+          'w-10',
+          'h-10',
+          'flex',
+          'items-center',
+          'justify-center',
+          'rounded-lg',
+          'drop-shadow-lg',
+          'hover:drop-shadow-none',
+          'bg-white',
+          resetButtonBgColor,
+        ])}
         type="button"
         aria-label="Reset game"
         onClick={onResetClick}
         onKeyDown={onResetClick}
       >
-        <section className="text-2xl">{emoji}</section>
+        <section className={classnames(['text-2xl'])}>{emoji}</section>
       </button>
-      <section className="flex justify-between items-center w-28 h-10 rounded-lg bg-slate-200 px-4">
+      <section
+        className={classnames([
+          'flex',
+          'justify-between',
+          'items-center',
+          'w-28',
+          'h-10',
+          'rounded-lg',
+          'px-4',
+          'shadow-inner',
+          sidePanelBgColor,
+        ])}
+      >
         <section>⏰</section>
         <section>{duration}</section>
       </section>
