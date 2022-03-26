@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import PaletteContext from '../PaletteContext';
 
 type UnrevealedAreaAreaProps = {
-  bgColor: 'light' | 'dark';
+  mode: 'light' | 'dark';
   x: number;
   y: number;
   flagged: boolean;
@@ -14,7 +14,7 @@ type UnrevealedAreaAreaProps = {
 function UnrevealedArea({
   x,
   y,
-  bgColor,
+  mode,
   flagged,
   onClick,
   onContextMenu,
@@ -42,8 +42,8 @@ function UnrevealedArea({
         'items-center',
         'w-full',
         'h-full',
-        bgColor === 'light' ? lightBgColor : darkBgColor,
-        bgColor === 'light' ? lightBgColorHover : darkBgColorHover,
+        mode === 'light' ? lightBgColor : darkBgColor,
+        mode === 'light' ? lightBgColorHover : darkBgColorHover,
       ])}
       type="button"
       aria-label="Reveal area"
@@ -57,11 +57,11 @@ function UnrevealedArea({
 }
 
 type MineAreaPoprs = {
-  bgColor: 'light' | 'dark';
+  mode: 'light' | 'dark';
   boomed: boolean;
 };
 
-function MineArea({ bgColor, boomed }: MineAreaPoprs) {
+function MineArea({ mode, boomed }: MineAreaPoprs) {
   const palette = useContext(PaletteContext);
   const boomedBgColor = palette.area.bombArea.boomed.bgColor;
   const notBoomedLightBgColor = palette.area.bombArea.notBoomed.light.bgColor;
@@ -71,7 +71,7 @@ function MineArea({ bgColor, boomed }: MineAreaPoprs) {
     mineAreaBgColor = boomedBgColor;
   } else {
     mineAreaBgColor =
-      bgColor === 'light' ? notBoomedLightBgColor : notBoomedDarkBgColor;
+      mode === 'light' ? notBoomedLightBgColor : notBoomedDarkBgColor;
   }
   const emoji = boomed ? '💥' : '💣';
   const onContextMenu = (e: React.MouseEvent<Element, MouseEvent>) => {
@@ -88,7 +88,7 @@ function MineArea({ bgColor, boomed }: MineAreaPoprs) {
 }
 
 type SafeAreaAreaProps = {
-  bgColor: 'light' | 'dark';
+  mode: 'light' | 'dark';
   adjMinesCount: number;
 };
 
@@ -103,7 +103,7 @@ const countColorMap: { [key: number]: string } = {
   8: 'text-gray-500',
 };
 
-function SafeArea({ adjMinesCount, bgColor }: SafeAreaAreaProps) {
+function SafeArea({ adjMinesCount, mode }: SafeAreaAreaProps) {
   const onContextMenu = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.preventDefault();
   };
@@ -120,7 +120,7 @@ function SafeArea({ adjMinesCount, bgColor }: SafeAreaAreaProps) {
         'h-full',
         'justify-center',
         'items-center',
-        bgColor === 'light' ? lightBgColor : darkBgColor,
+        mode === 'light' ? lightBgColor : darkBgColor,
       ])}
     >
       <section className={`${countColorMap[adjMinesCount]} font-bold`}>
@@ -159,7 +159,7 @@ function Area({
   if (!revealed) {
     AreaComponent = (
       <UnrevealedArea
-        bgColor={bgColor}
+        mode={bgColor}
         x={x}
         y={y}
         flagged={flagged}
@@ -168,11 +168,9 @@ function Area({
       />
     );
   } else if (hasMines) {
-    AreaComponent = <MineArea bgColor={bgColor} boomed={boomed} />;
+    AreaComponent = <MineArea mode={bgColor} boomed={boomed} />;
   } else {
-    AreaComponent = (
-      <SafeArea bgColor={bgColor} adjMinesCount={adjMinesCount} />
-    );
+    AreaComponent = <SafeArea mode={bgColor} adjMinesCount={adjMinesCount} />;
   }
 
   return (
