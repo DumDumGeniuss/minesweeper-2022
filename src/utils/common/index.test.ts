@@ -6,7 +6,7 @@ describe('common utils', () => {
       const time = new Date().getTime();
       await pause(1000);
       const newTime = new Date().getTime();
-      expect(newTime - time).toBeGreaterThan(1000);
+      expect(newTime - time).toBeGreaterThan(999);
       expect(newTime - time).toBeLessThan(1050);
     });
   });

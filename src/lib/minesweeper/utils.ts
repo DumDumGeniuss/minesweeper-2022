@@ -17,21 +17,29 @@ export function getCoordOfFirstMatchedArea(
   options: {
     hasMines?: boolean;
     revealed?: boolean;
+    flagged?: boolean;
     adjMinesCount?: number;
   }
 ): Coordinate {
   for (let i = 0; i < field.length; i += 1) {
     for (let j = 0; j < field[i].length; j += 1) {
-      const { hasMines, revealed, adjMinesCount } = field[i][j];
+      const { hasMines, flagged, revealed, adjMinesCount } = field[i][j];
       const hasMinesDoesmatch =
         options.hasMines === undefined || hasMines === options.hasMines;
+      const flaggedDoesmatch =
+        options.flagged === undefined || flagged === options.flagged;
       const revealedDoesmatch =
         options.revealed === undefined || revealed === options.revealed;
       const adjMinesCountDoesmatch =
         options.adjMinesCount === undefined ||
         adjMinesCount === options.adjMinesCount;
 
-      if (hasMinesDoesmatch && revealedDoesmatch && adjMinesCountDoesmatch) {
+      if (
+        hasMinesDoesmatch &&
+        flaggedDoesmatch &&
+        revealedDoesmatch &&
+        adjMinesCountDoesmatch
+      ) {
         return [i, j];
       }
     }

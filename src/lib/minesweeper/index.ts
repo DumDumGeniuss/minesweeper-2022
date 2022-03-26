@@ -201,7 +201,7 @@ class Minesweeper {
   private revealAreaWithMines(c: Coordinate) {
     const [x, y] = c;
     this.field[x][y].boomed = true;
-    this.setAllAreasRevealed();
+    this.forceAllAreasToBeRevealed();
     this.fail();
   }
 
@@ -225,7 +225,7 @@ class Minesweeper {
 
         const { hasMines, revealed, flagged, adjMinesCount } = this.field[x][y];
         if (!hasMines && !revealed && !flagged) {
-          this.setAreaRevealed([x, y]);
+          this.forceAreaToBeRevealed([x, y]);
 
           if (adjMinesCount === 0) {
             for (let i = x - 1; i <= x + 1; i += 1) {
@@ -247,7 +247,7 @@ class Minesweeper {
       this.size.width * this.size.height
     ) {
       this.succeed();
-      this.setAllAreasRevealed();
+      this.forceAllAreasToBeRevealed();
     }
   }
 
@@ -354,6 +354,7 @@ class Minesweeper {
 
   /**
    * Randomly plant mines and calculate adjacent mine counts of all areas.
+   * @param c Coordinate
    */
   private plantMines(excluededCoord: Coordinate) {
     let plantedMinesCount = 0;
@@ -372,21 +373,27 @@ class Minesweeper {
   }
 
   /**
-   * Set reveaved of the area to true.
+   * Force an area to be revealed.
+   * @param c Coordinate
    */
-  private setAreaRevealed(c: Coordinate) {
+  private forceAreaToBeRevealed(c: Coordinate) {
     const [x, y] = c;
     this.field[x][y].revealed = true;
     this.revealedAreaCount += 1;
+
+    if (this.field[x][y].flagged) {
+      this.field[x][y].flagged = false;
+      this.flagsCount -= 1;
+    }
   }
 
   /**
-   * Set reveaved of all areas to true.
+   * Force all area to be revealed.
    */
-  private setAllAreasRevealed() {
+  private forceAllAreasToBeRevealed() {
     for (let x = 0; x < this.size.width; x += 1) {
       for (let y = 0; y < this.size.height; y += 1) {
-        this.setAreaRevealed([x, y]);
+        this.forceAreaToBeRevealed([x, y]);
       }
     }
   }

@@ -137,6 +137,25 @@ describe('Minesweeper', () => {
 
       expect(progress.status).toBe('SUCCEEDED');
     });
+    it('All flags should be cleared when game has ended.', () => {
+      const game = new Minesweeper({ width: 3, height: 3 }, 1);
+      game.flagArea([0, 0]);
+      let progress: Progress = game.revealArea([0, 1]);
+      const firstCoordWithMines = getCoordOfFirstMatchedArea(progress.field, {
+        hasMines: true,
+        revealed: false,
+        flagged: false,
+      });
+      progress = game.revealArea(firstCoordWithMines);
+
+      const firstCoordOfFlaggedArea = getCoordOfFirstMatchedArea(
+        progress.field,
+        { flagged: true }
+      );
+
+      expect(progress.flagsCount).toBe(0);
+      expect(firstCoordOfFlaggedArea).toEqual([-1, -1]);
+    });
   });
   describe('flagArea', () => {
     it('Should set flagged of the area at the coordinate to true.', () => {
@@ -144,6 +163,12 @@ describe('Minesweeper', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 5);
       const progress: Progress = game.flagArea([x, y]);
       expect(progress.field[x][y].flagged).toBe(true);
+    });
+    it('Should add flags count by 1.', () => {
+      const [x, y]: Coordinate = [0, 0];
+      const game = new Minesweeper({ width: 3, height: 3 }, 5);
+      const progress: Progress = game.flagArea([x, y]);
+      expect(progress.flagsCount).toBe(1);
     });
     it('Should trigger an error saying this area has been revealed.', () => {
       const [x, y]: Coordinate = [0, 0];
@@ -168,13 +193,20 @@ describe('Minesweeper', () => {
       }
     });
   });
-  describe('flagArea', () => {
+  describe('unflagArea', () => {
     it('Should set flagged from the area at the coordinate to false.', () => {
       const [x, y]: Coordinate = [0, 0];
       const game = new Minesweeper({ width: 3, height: 3 }, 5);
       game.flagArea([x, y]);
       const progress: Progress = game.unflagArea([x, y]);
       expect(progress.field[0][0].flagged).toBe(false);
+    });
+    it('Should subtract flags count by 1.', () => {
+      const [x, y]: Coordinate = [0, 0];
+      const game = new Minesweeper({ width: 3, height: 3 }, 5);
+      game.flagArea([x, y]);
+      const progress: Progress = game.unflagArea([x, y]);
+      expect(progress.flagsCount).toBe(0);
     });
     it('Should trigger an error saying this area has been flagged.', () => {
       const [x, y]: Coordinate = [0, 0];

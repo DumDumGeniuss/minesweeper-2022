@@ -25,6 +25,8 @@ export default function useMinesweeper(
   const onAreaClick = useCallback(
     (x: number, y: number): any => {
       const progress = minesweeper.revealArea([x, y]);
+      setGameDuration(progress.duration);
+      setGameFlagsCount(progress.flagsCount);
       setMinefield(progress.field);
       setGameStatus(progress.status);
     },
