@@ -7,6 +7,7 @@ enum Theme {
   Emerald = 'emerald',
   Indigo = 'indigo',
   Gray = 'gray',
+  Pink = 'pink',
 }
 
 type Palette = {

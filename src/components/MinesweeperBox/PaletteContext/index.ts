@@ -7,6 +7,7 @@ import greenTheme from './themes/green';
 import emeraldTheme from './themes/emerald';
 import indigoTheme from './themes/indigo';
 import grayTheme from './themes/gray';
+import pinkTheme from './themes/pink';
 import { PaletteGroup, Palette, Theme } from './types';
 
 const paletteGroup: PaletteGroup = {
@@ -18,6 +19,7 @@ const paletteGroup: PaletteGroup = {
   emerald: emeraldTheme,
   indigo: indigoTheme,
   gray: grayTheme,
+  pink: pinkTheme,
 };
 
 function convertStringToTheme(value: string): Theme {
@@ -38,6 +40,8 @@ function convertStringToTheme(value: string): Theme {
       return Theme.Red;
     case Theme.Sky:
       return Theme.Sky;
+    case Theme.Pink:
+      return Theme.Pink;
     default:
       return Theme.Sky;
   }

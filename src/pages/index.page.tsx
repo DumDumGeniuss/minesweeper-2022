@@ -76,6 +76,13 @@ const Home: NextPage = function Home() {
               borderColorSelect: 'border-sky-600',
               borderColorHover: 'hover:border-sky-600',
             },
+            {
+              value: Theme.Pink,
+              bgColor: 'bg-pink-400',
+              borderColor: 'border-pink-400',
+              borderColorSelect: 'border-pink-600',
+              borderColorHover: 'hover:border-pink-600',
+            },
           ]}
           onOptionClick={onThemeSelect}
         />
