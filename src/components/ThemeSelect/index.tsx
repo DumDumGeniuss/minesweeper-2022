@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useState, useCallback, useRef } from 'react';
 import classnames from 'classnames';
 import useClickOutside from '@/hooks/useClickOutside';
@@ -33,18 +34,18 @@ const ThemeSelect = function ThemeSelect({
     setIsDropdownVisible(false);
   }, []);
 
+  const onDisplayThemeDropdownButtonClick = useCallback(() => {
+    setIsDropdownVisible(!isDropdownVisible);
+  }, []);
+
   const chosenOption = options.find((o) => o.value === choice) || null;
   const chosenBgColor = chosenOption?.bgColor || null;
-  const displayDropdown = () => {
-    setIsDropdownVisible(true);
-  };
-  console.log(options, choice);
 
   return (
     <section ref={rootElementRef} className="relative">
       <button
         type="button"
-        aria-label="Display theme select"
+        aria-label="Display theme dropdown"
         className={classnames([
           'flex',
           'justify-between',
@@ -54,15 +55,33 @@ const ThemeSelect = function ThemeSelect({
           'drop-shadow-lg',
           'rounded-md',
         ])}
-        onClick={displayDropdown}
+        onClick={onDisplayThemeDropdownButtonClick}
       >
         <section
           aria-label="Chosen theme display"
           className={classnames(['w-6', 'h-6', 'rounded-md', chosenBgColor])}
         />
         <section
-          className={classnames(['w-4', 'h-4', 'ml-2', 'bg-blue-500'])}
-        />
+          className={classnames([
+            'flex',
+            'justify-center',
+            'w-4',
+            'h-4',
+            'ml-2',
+          ])}
+        >
+          <section
+            className={classnames([
+              'relative',
+              'w-2',
+              'h-full',
+              'transform-gpu',
+              isDropdownVisible && 'rotate-180',
+            ])}
+          >
+            <Image src="/icons/arrow.svg" layout="fill" />
+          </section>
+        </section>
       </button>
       <section
         role="listbox"

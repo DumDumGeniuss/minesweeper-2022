@@ -14,6 +14,10 @@ const nextConfig = {
     dirs: ['src'],
   },
   dir: './src',
+  images: {
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
 };
 
 module.exports = nextConfig;
