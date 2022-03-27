@@ -1,39 +1,17 @@
 import type { NextPage } from 'next';
 import { useState, useCallback } from 'react';
-import MinesweeperBox, { Theme } from '@/components/MinesweeperBox';
+import MinesweeperBox, {
+  Theme,
+  convertStringToTheme,
+} from '@/components/MinesweeperBox';
 import ThemeSelect from '@/components/ThemeSelect';
 
 const Home: NextPage = function Home() {
+  const [size] = useState({ width: 20, height: 15 });
+  const [minesCount] = useState(40);
   const [theme, setTheme] = useState(Theme.Sky);
   const onThemeSelect = useCallback((value: string) => {
-    switch (value) {
-      case Theme.Amber:
-        setTheme(Theme.Amber);
-        break;
-      case Theme.Emerald:
-        setTheme(Theme.Emerald);
-        break;
-      case Theme.Indigo:
-        setTheme(Theme.Indigo);
-        break;
-      case Theme.Gray:
-        setTheme(Theme.Gray);
-        break;
-      case Theme.Green:
-        setTheme(Theme.Green);
-        break;
-      case Theme.Purple:
-        setTheme(Theme.Purple);
-        break;
-      case Theme.Red:
-        setTheme(Theme.Red);
-        break;
-      case Theme.Sky:
-        setTheme(Theme.Sky);
-        break;
-      default:
-        setTheme(Theme.Sky);
-    }
+    setTheme(convertStringToTheme(value));
   }, []);
 
   return (
@@ -45,53 +23,65 @@ const Home: NextPage = function Home() {
             {
               value: Theme.Amber,
               bgColor: 'bg-amber-400',
-              darkColor: 'bg-amber-400',
+              borderColor: 'border-amber-400',
+              borderColorSelect: 'border-amber-600',
+              borderColorHover: 'hover:border-amber-600',
             },
             {
               value: Theme.Emerald,
               bgColor: 'bg-emerald-400',
-              darkColor: 'bg-emerald-400',
+              borderColor: 'border-emerald-400',
+              borderColorSelect: 'border-emerald-600',
+              borderColorHover: 'hover:border-emerald-600',
             },
             {
               value: Theme.Indigo,
               bgColor: 'bg-indigo-400',
-              darkColor: 'bg-indigo-400',
+              borderColor: 'border-indigo-400',
+              borderColorSelect: 'border-indigo-600',
+              borderColorHover: 'hover:border-indigo-600',
             },
             {
               value: Theme.Gray,
               bgColor: 'bg-gray-400',
-              darkColor: 'bg-gray-400',
+              borderColor: 'border-gray-400',
+              borderColorSelect: 'border-gray-600',
+              borderColorHover: 'hover:border-gray-600',
             },
             {
               value: Theme.Green,
               bgColor: 'bg-green-400',
-              darkColor: 'bg-green-400',
+              borderColor: 'border-green-400',
+              borderColorSelect: 'border-green-600',
+              borderColorHover: 'hover:border-green-600',
             },
             {
               value: Theme.Purple,
               bgColor: 'bg-purple-400',
-              darkColor: 'bg-purple-400',
+              borderColor: 'border-purple-400',
+              borderColorSelect: 'border-purple-600',
+              borderColorHover: 'hover:border-purple-600',
             },
             {
               value: Theme.Red,
               bgColor: 'bg-red-400',
-              darkColor: 'bg-red-400',
+              borderColor: 'border-red-400',
+              borderColorSelect: 'border-red-600',
+              borderColorHover: 'hover:border-red-600',
             },
             {
               value: Theme.Sky,
               bgColor: 'bg-sky-400',
-              darkColor: 'bg-sky-400',
+              borderColor: 'border-sky-400',
+              borderColorSelect: 'border-sky-600',
+              borderColorHover: 'hover:border-sky-600',
             },
           ]}
           onOptionClick={onThemeSelect}
         />
       </section>
       <section className="flex w-full h-full justify-center items-center">
-        <MinesweeperBox
-          theme={theme}
-          size={{ width: 20, height: 15 }}
-          minesCount={40}
-        />
+        <MinesweeperBox theme={theme} size={size} minesCount={minesCount} />
       </section>
     </main>
   );

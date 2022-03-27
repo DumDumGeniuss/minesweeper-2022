@@ -20,7 +20,9 @@ describe('ThemeSelect', () => {
       {
         value: 'red',
         bgColor: 'bg-red-200',
-        darkColor: 'bg-red-300',
+        borderColor: 'border-red-200',
+        borderColorSelect: 'hover:border-red-300',
+        borderColorHover: 'hover:border-red-300',
       },
     ];
     const { container } = render(
@@ -37,12 +39,16 @@ describe('ThemeSelect', () => {
       {
         value: 'red',
         bgColor: 'bg-red-200',
-        darkColor: 'bg-red-300',
+        borderColor: 'border-red-200',
+        borderColorSelect: 'bg-red-300',
+        borderColorHover: 'hover:border-red-300',
       },
       {
         value: 'green',
         bgColor: 'bg-green-200',
-        darkColor: 'bg-green-300',
+        borderColor: 'border-green-200',
+        borderColorSelect: 'bg-green-300',
+        borderColorHover: 'hover:border-green-300',
       },
     ];
     const { container } = render(
@@ -60,12 +66,16 @@ describe('ThemeSelect', () => {
       {
         value: 'red',
         bgColor: 'bg-red-200',
-        darkColor: 'bg-red-300',
+        borderColor: 'border-red-200',
+        borderColorSelect: 'hover:border-red-300',
+        borderColorHover: 'hover:border-red-300',
       },
       {
         value: 'green',
         bgColor: 'bg-green-200',
-        darkColor: 'bg-green-300',
+        borderColor: 'border-green-200',
+        borderColorSelect: 'hover:border-green-300',
+        borderColorHover: 'hover:border-green-300',
       },
     ];
     const onOptionClick = jest.fn();

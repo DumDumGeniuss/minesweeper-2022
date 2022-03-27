@@ -20,7 +20,30 @@ const paletteGroup: PaletteGroup = {
   gray: grayTheme,
 };
 
+function convertStringToTheme(value: string): Theme {
+  switch (value) {
+    case Theme.Amber:
+      return Theme.Amber;
+    case Theme.Emerald:
+      return Theme.Emerald;
+    case Theme.Indigo:
+      return Theme.Indigo;
+    case Theme.Gray:
+      return Theme.Gray;
+    case Theme.Green:
+      return Theme.Green;
+    case Theme.Purple:
+      return Theme.Purple;
+    case Theme.Red:
+      return Theme.Red;
+    case Theme.Sky:
+      return Theme.Sky;
+    default:
+      return Theme.Sky;
+  }
+}
+
 const MinesweeperBoxPaletteContext = createContext(paletteGroup.green);
 export default MinesweeperBoxPaletteContext;
-export { paletteGroup, Theme };
+export { paletteGroup, Theme, convertStringToTheme };
 export type { Palette };

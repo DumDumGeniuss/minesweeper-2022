@@ -5,7 +5,9 @@ import useClickOutside from '@/hooks/useClickOutside';
 type Options = {
   value: string;
   bgColor: string;
-  darkColor: string;
+  borderColor: string;
+  borderColorSelect: string;
+  borderColorHover: string;
 }[];
 
 type Props = {
@@ -36,6 +38,7 @@ const ThemeSelect = function ThemeSelect({
   const displayDropdown = () => {
     setIsDropdownVisible(true);
   };
+  console.log(options, choice);
 
   return (
     <section ref={rootElementRef} className="relative">
@@ -49,13 +52,13 @@ const ThemeSelect = function ThemeSelect({
           'p-3',
           'bg-white',
           'drop-shadow-lg',
-          'rounded-lg',
+          'rounded-md',
         ])}
         onClick={displayDropdown}
       >
         <section
           aria-label="Chosen theme display"
-          className={classnames(['w-5', 'h-5', 'rounded-sm', chosenBgColor])}
+          className={classnames(['w-6', 'h-6', 'rounded-md', chosenBgColor])}
         />
         <section
           className={classnames(['w-4', 'h-4', 'ml-2', 'bg-blue-500'])}
@@ -66,7 +69,7 @@ const ThemeSelect = function ThemeSelect({
         className={classnames([
           'absolute',
           'top-full',
-          'pt-2',
+          'pt-3',
           !isDropdownVisible && 'hidden',
         ])}
       >
@@ -78,7 +81,7 @@ const ThemeSelect = function ThemeSelect({
             'flex-col',
             'bg-white',
             'drop-shadow-lg',
-            'rounded-lg',
+            'rounded-md',
           ])}
         >
           {options.map((item, itemIdx, allItems) => (
@@ -87,11 +90,16 @@ const ThemeSelect = function ThemeSelect({
               type="button"
               aria-label="Select theme"
               className={classnames([
-                'w-5',
-                'h-5',
-                'rounded-sm',
-                itemIdx !== allItems.length - 1 ? 'mb-2' : '',
+                'w-6',
+                'h-6',
+                'rounded-md',
+                'border-2',
                 item.bgColor,
+                item.borderColorHover,
+                item.value === choice
+                  ? item.borderColorSelect
+                  : item.borderColor,
+                itemIdx !== allItems.length - 1 && 'mb-2',
               ])}
               onClick={() => onThemeButtonClick(item.value)}
             />
