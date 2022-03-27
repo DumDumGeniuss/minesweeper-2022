@@ -3,6 +3,11 @@ import { useState, useCallback, useRef } from 'react';
 import classnames from 'classnames';
 import useClickOutside from '@/hooks/useClickOutside';
 
+enum Testid {
+  ChosenThemeDisplay = 'chosen-theme-color-display',
+  ThemeList = 'theme-list',
+}
+
 type Options = {
   value: string;
   bgColor: string;
@@ -29,14 +34,17 @@ const ThemeSelect = function ThemeSelect({
   };
   useClickOutside(rootElementRef, onClickOutside);
 
-  const onThemeButtonClick = useCallback((value: string) => {
-    onOptionClick(value);
-    setIsDropdownVisible(false);
-  }, []);
+  const onThemeButtonClick = useCallback(
+    (value: string) => {
+      onOptionClick(value);
+      setIsDropdownVisible(false);
+    },
+    [onOptionClick]
+  );
 
   const onDisplayThemeDropdownButtonClick = useCallback(() => {
     setIsDropdownVisible(!isDropdownVisible);
-  }, []);
+  }, [isDropdownVisible]);
 
   const chosenOption = options.find((o) => o.value === choice) || null;
   const chosenBgColor = chosenOption?.bgColor || null;
@@ -58,7 +66,7 @@ const ThemeSelect = function ThemeSelect({
         onClick={onDisplayThemeDropdownButtonClick}
       >
         <section
-          aria-label="Chosen theme display"
+          data-testid={Testid.ChosenThemeDisplay}
           className={classnames(['w-6', 'h-6', 'rounded-md', chosenBgColor])}
         />
         <section
@@ -83,8 +91,8 @@ const ThemeSelect = function ThemeSelect({
           </section>
         </section>
       </button>
-      <section
-        role="listbox"
+      <ul
+        data-testid={Testid.ThemeList}
         className={classnames([
           'absolute',
           'top-full',
@@ -92,8 +100,7 @@ const ThemeSelect = function ThemeSelect({
           !isDropdownVisible && 'hidden',
         ])}
       >
-        <section
-          role="listitem"
+        <li
           className={classnames([
             'p-3',
             'flex',
@@ -123,11 +130,12 @@ const ThemeSelect = function ThemeSelect({
               onClick={() => onThemeButtonClick(item.value)}
             />
           ))}
-        </section>
-      </section>
+        </li>
+      </ul>
     </section>
   );
 };
 
 export default ThemeSelect;
+export { Testid };
 export type { Options };
