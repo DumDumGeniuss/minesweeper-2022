@@ -5,6 +5,7 @@ import MinesweeperBox, {
   convertStringToTheme,
 } from '@/components/MinesweeperBox';
 import ThemeSelect from '@/components/ThemeSelect';
+import Svg from '@/components/Svg';
 
 const Home: NextPage = function Home() {
   const [size] = useState({ width: 20, height: 15 });
@@ -16,6 +17,9 @@ const Home: NextPage = function Home() {
 
   return (
     <main className="relative w-screen h-screen bg-slate-100">
+      <section className="absolute top-4 left-4">
+        <Svg name="bigLogo" />
+      </section>
       <section className="absolute top-4 right-4">
         <ThemeSelect
           choice={theme}

@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import { useState, useCallback, useRef } from 'react';
 import classnames from 'classnames';
 import useClickOutside from '@/hooks/useClickOutside';
+import Svg from '@/components/Svg';
 
 enum Testid {
   ChosenThemeDisplay = 'chosen-theme-color-display',
@@ -73,22 +73,14 @@ const ThemeSelect = function ThemeSelect({
           className={classnames([
             'flex',
             'justify-center',
+            'items-center',
             'w-4',
             'h-4',
             'ml-2',
+            isDropdownVisible && 'rotate-180',
           ])}
         >
-          <section
-            className={classnames([
-              'relative',
-              'w-2',
-              'h-full',
-              'transform-gpu',
-              isDropdownVisible && 'rotate-180',
-            ])}
-          >
-            <Image src="/icons/arrow.svg" layout="fill" />
-          </section>
+          <Svg name="arrow" />
         </section>
       </button>
       <ul
