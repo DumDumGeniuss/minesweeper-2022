@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Area from '.';
+import Area, { Testid } from '.';
 
 describe('Area', () => {
   it('Should render component successfully.', () => {
@@ -70,6 +70,22 @@ describe('Area', () => {
       />
     );
     expect(screen.getByText('7')).toBeInTheDocument();
+  });
+  it('When a safe area with a flag is revealed, it should still has a flag on it.', () => {
+    render(
+      <Area
+        x={1}
+        y={1}
+        revealed
+        hasMines={false}
+        adjMinesCount={7}
+        boomed={false}
+        flagged
+        onClick={() => {}}
+        onContextMenu={() => {}}
+      />
+    );
+    expect(screen.getByTestId(Testid.SafeAreaWithFlag)).toBeInTheDocument();
   });
   it('Should display exploded bomb emoji when an area with mines is stepped on.', () => {
     render(

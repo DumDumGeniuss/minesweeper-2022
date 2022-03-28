@@ -12,37 +12,26 @@ export function getMinesCount(field: Field) {
   return count;
 }
 
-export function getCoordOfFirstMatchedArea(
-  field: Field,
-  options: {
-    hasMines?: boolean;
-    revealed?: boolean;
-    flagged?: boolean;
-    adjMinesCount?: number;
-  }
-): Coordinate {
+export function getFirstCoordWithUnrevealedMine(field: Field): Coordinate {
   for (let i = 0; i < field.length; i += 1) {
     for (let j = 0; j < field[i].length; j += 1) {
-      const { hasMines, flagged, revealed, adjMinesCount } = field[i][j];
-      const hasMinesDoesmatch =
-        options.hasMines === undefined || hasMines === options.hasMines;
-      const flaggedDoesmatch =
-        options.flagged === undefined || flagged === options.flagged;
-      const revealedDoesmatch =
-        options.revealed === undefined || revealed === options.revealed;
-      const adjMinesCountDoesmatch =
-        options.adjMinesCount === undefined ||
-        adjMinesCount === options.adjMinesCount;
-
-      if (
-        hasMinesDoesmatch &&
-        flaggedDoesmatch &&
-        revealedDoesmatch &&
-        adjMinesCountDoesmatch
-      ) {
+      if (field[i][j].hasMines && !field[i][j].revealed) {
         return [i, j];
       }
     }
   }
+
+  return [-1, -1];
+}
+
+export function getFirstCoordOfUnrevealedArea(field: Field): Coordinate {
+  for (let i = 0; i < field.length; i += 1) {
+    for (let j = 0; j < field[i].length; j += 1) {
+      if (!field[i][j].revealed) {
+        return [i, j];
+      }
+    }
+  }
+
   return [-1, -1];
 }

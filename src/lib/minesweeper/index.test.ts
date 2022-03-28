@@ -10,7 +10,11 @@ import Minesweeper, {
   getHasBeenFlaggedError,
   getHasNotBeenFlaggedError,
 } from '.';
-import { getMinesCount, getCoordOfFirstMatchedArea } from './utils';
+import {
+  getMinesCount,
+  getFirstCoordWithUnrevealedMine,
+  getFirstCoordOfUnrevealedArea,
+} from './utils';
 
 describe('Minesweeper', () => {
   describe('constructor', () => {
@@ -94,10 +98,7 @@ describe('Minesweeper', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 1);
       const c: Coordinate = [0, 0];
       const progress: Progress = game.revealArea(c);
-      const coord: Coordinate = getCoordOfFirstMatchedArea(progress.field, {
-        hasMines: true,
-        revealed: false,
-      });
+      const coord: Coordinate = getFirstCoordWithUnrevealedMine(progress.field);
       try {
         game.revealArea(coord);
         game.revealArea(coord);
@@ -109,10 +110,7 @@ describe('Minesweeper', () => {
     it('Should reveal the area at the coordinate.', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 5);
       let progress: Progress = game.getProgress();
-      const coord: Coordinate = getCoordOfFirstMatchedArea(progress.field, {
-        hasMines: false,
-        revealed: false,
-      });
+      const coord: Coordinate = getFirstCoordOfUnrevealedArea(progress.field);
       progress = game.revealArea(coord);
       const [x, y] = coord;
 
@@ -121,10 +119,7 @@ describe('Minesweeper', () => {
     it('Should end game when clicking a bomb.', () => {
       const game = new Minesweeper({ width: 3, height: 3 }, 4);
       let progress: Progress = game.revealArea([0, 0]);
-      const coord = getCoordOfFirstMatchedArea(game.getProgress().field, {
-        hasMines: true,
-        revealed: false,
-      });
+      const coord = getFirstCoordWithUnrevealedMine(game.getProgress().field);
       progress = game.revealArea(coord);
       const [x, y] = coord;
 
@@ -136,25 +131,6 @@ describe('Minesweeper', () => {
       const progress: Progress = game.revealArea([0, 0]);
 
       expect(progress.status).toBe('SUCCEEDED');
-    });
-    it('All flags should be cleared when game has ended.', () => {
-      const game = new Minesweeper({ width: 3, height: 3 }, 1);
-      game.flagArea([0, 0]);
-      let progress: Progress = game.revealArea([0, 1]);
-      const firstCoordWithMines = getCoordOfFirstMatchedArea(progress.field, {
-        hasMines: true,
-        revealed: false,
-        flagged: false,
-      });
-      progress = game.revealArea(firstCoordWithMines);
-
-      const firstCoordOfFlaggedArea = getCoordOfFirstMatchedArea(
-        progress.field,
-        { flagged: true }
-      );
-
-      expect(progress.flagsCount).toBe(0);
-      expect(firstCoordOfFlaggedArea).toEqual([-1, -1]);
     });
   });
   describe('flagArea', () => {

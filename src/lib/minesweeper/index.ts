@@ -380,11 +380,6 @@ class Minesweeper {
     const [x, y] = c;
     this.field[x][y].revealed = true;
     this.revealedAreaCount += 1;
-
-    if (this.field[x][y].flagged) {
-      this.field[x][y].flagged = false;
-      this.flagsCount -= 1;
-    }
   }
 
   /**

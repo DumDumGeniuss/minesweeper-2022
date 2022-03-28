@@ -2,6 +2,10 @@ import { useContext } from 'react';
 import classnames from 'classnames';
 import PaletteContext from '../PaletteContext';
 
+enum Testid {
+  SafeAreaWithFlag = 'safe-area-with-flag',
+}
+
 type UnrevealedAreaAreaProps = {
   mode: 'light' | 'dark';
   x: number;
@@ -90,6 +94,7 @@ function MineArea({ mode, boomed }: MineAreaPoprs) {
 type SafeAreaAreaProps = {
   mode: 'light' | 'dark';
   adjMinesCount: number;
+  flagged: boolean;
 };
 
 const countColorMap: { [key: number]: string } = {
@@ -103,7 +108,7 @@ const countColorMap: { [key: number]: string } = {
   8: 'text-gray-500',
 };
 
-function SafeArea({ adjMinesCount, mode }: SafeAreaAreaProps) {
+function SafeArea({ adjMinesCount, flagged, mode }: SafeAreaAreaProps) {
   const onContextMenu = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.preventDefault();
   };
@@ -115,6 +120,7 @@ function SafeArea({ adjMinesCount, mode }: SafeAreaAreaProps) {
     <section
       onContextMenu={onContextMenu}
       className={classnames([
+        'relative',
         'flex',
         'w-full',
         'h-full',
@@ -123,6 +129,20 @@ function SafeArea({ adjMinesCount, mode }: SafeAreaAreaProps) {
         mode === 'light' ? lightBgColor : darkBgColor,
       ])}
     >
+      {flagged ? (
+        <section
+          data-testid={Testid.SafeAreaWithFlag}
+          className={classnames([
+            'absolute',
+            'right-0',
+            'top-0',
+            'opacity-50',
+            'text-xs',
+          ])}
+        >
+          🚩
+        </section>
+      ) : null}
       <section className={`${countColorMap[adjMinesCount]} font-bold`}>
         {adjMinesCount || ''}
       </section>
@@ -170,7 +190,13 @@ function Area({
   } else if (hasMines) {
     AreaComponent = <MineArea mode={bgColor} boomed={boomed} />;
   } else {
-    AreaComponent = <SafeArea mode={bgColor} adjMinesCount={adjMinesCount} />;
+    AreaComponent = (
+      <SafeArea
+        mode={bgColor}
+        adjMinesCount={adjMinesCount}
+        flagged={flagged}
+      />
+    );
   }
 
   return (
@@ -179,3 +205,4 @@ function Area({
 }
 
 export default Area;
+export { Testid };
