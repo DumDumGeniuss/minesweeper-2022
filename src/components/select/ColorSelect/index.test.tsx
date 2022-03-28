@@ -28,9 +28,9 @@ describe('ColorSelect', () => {
     render(
       <ColorSelect choice="red" options={options} onOptionClick={() => {}} />
     );
-    const chosenThemeDisplay = screen.getByTestId(Testid.ChosenThemeDisplay);
+    const chosenColorDisplay = screen.getByTestId(Testid.ChosenColorDisplay);
 
-    expect(chosenThemeDisplay?.classList || []).toContain(options[0].bgColor);
+    expect(chosenColorDisplay?.classList || []).toContain(options[0].bgColor);
   });
   it('Should render number of options correctly.', () => {
     const options: Options = [
@@ -49,17 +49,15 @@ describe('ColorSelect', () => {
         borderColorHover: 'hover:border-green-300',
       },
     ];
-    const { container } = render(
+    render(
       <ColorSelect choice="red" options={options} onOptionClick={() => {}} />
     );
-    const themeOptions = container.querySelectorAll(
-      '[aria-label="Select theme"]'
-    );
-    expect(themeOptions[0].classList).toContain(options[0].bgColor);
-    expect(themeOptions[1].classList).toContain(options[1].bgColor);
-    expect(themeOptions.length).toBe(2);
+    const colorButtons = screen.getAllByTestId(Testid.ColorButton);
+    expect(colorButtons[0].classList).toContain(options[0].bgColor);
+    expect(colorButtons[1].classList).toContain(options[1].bgColor);
+    expect(colorButtons.length).toBe(2);
   });
-  it('Should open dropdown when "Display theme dropdown" button is clicked.', () => {
+  it('Should open dropdown when "Display color dropdown" button is clicked.', () => {
     const options: Options = [
       {
         value: 'red',
@@ -69,17 +67,17 @@ describe('ColorSelect', () => {
         borderColorHover: 'hover:border-red-300',
       },
     ];
-    const { container } = render(
+    render(
       <ColorSelect choice="red" options={options} onOptionClick={() => {}} />
     );
-    const displayThemeDropdownButton = container.querySelector(
-      '[aria-label="Display theme dropdown"]'
+    const displayColorDropdownButton = screen.getByTestId(
+      Testid.DisplayColorListButton
     );
-    if (displayThemeDropdownButton) {
-      fireEvent.click(displayThemeDropdownButton);
+    if (displayColorDropdownButton) {
+      fireEvent.click(displayColorDropdownButton);
     }
-    const themeList = screen.getByTestId(Testid.ThemeList);
-    expect(themeList?.classList || []).not.toContain('hidden');
+    const colorList = screen.getByTestId(Testid.ColorList);
+    expect(colorList?.classList || []).not.toContain('hidden');
   });
   it('Should trigger onOptionClick when an option is clicked.', () => {
     const options: Options = [
@@ -99,17 +97,15 @@ describe('ColorSelect', () => {
       },
     ];
     const onOptionClick = jest.fn();
-    const { container } = render(
+    render(
       <ColorSelect
         choice="red"
         options={options}
         onOptionClick={onOptionClick}
       />
     );
-    const themeOptions = container.querySelectorAll(
-      '[aria-label="Select theme"]'
-    );
-    fireEvent.click(themeOptions[1]);
+    const colorButtons = screen.getAllByTestId(Testid.ColorButton);
+    fireEvent.click(colorButtons[1]);
     expect(onOptionClick.mock.calls[0][0]).toBe(options[1].value);
   });
 });

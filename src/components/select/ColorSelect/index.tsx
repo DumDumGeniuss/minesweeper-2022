@@ -4,8 +4,10 @@ import useClickOutside from '@/hooks/useClickOutside';
 import ArrowSvg from '@/components/svg/ArrowSvg';
 
 enum Testid {
-  ChosenThemeDisplay = 'chosen-theme-color-display',
-  ThemeList = 'theme-list',
+  ChosenColorDisplay = 'chosen-color-display',
+  DisplayColorListButton = 'display-color-list-button',
+  ColorList = 'color-list',
+  ColorButton = 'color-button',
 }
 
 type Options = {
@@ -30,7 +32,7 @@ function ColorSelect({ choice, options, onOptionClick }: Props) {
   };
   useClickOutside(rootElementRef, onClickOutside);
 
-  const onThemeButtonClick = useCallback(
+  const onColorButtonClick = useCallback(
     (value: string) => {
       onOptionClick(value);
       setIsDropdownVisible(false);
@@ -38,7 +40,7 @@ function ColorSelect({ choice, options, onOptionClick }: Props) {
     [onOptionClick]
   );
 
-  const onDisplayThemeDropdownButtonClick = useCallback(() => {
+  const onDisplayColorDropdownButtonClick = useCallback(() => {
     setIsDropdownVisible(!isDropdownVisible);
   }, [isDropdownVisible]);
 
@@ -48,8 +50,9 @@ function ColorSelect({ choice, options, onOptionClick }: Props) {
   return (
     <section ref={rootElementRef} className="relative">
       <button
+        data-testid={Testid.DisplayColorListButton}
         type="button"
-        aria-label="Display theme dropdown"
+        aria-label="Display color dropdown"
         className={classnames([
           'flex',
           'justify-between',
@@ -59,10 +62,10 @@ function ColorSelect({ choice, options, onOptionClick }: Props) {
           'drop-shadow-lg',
           'rounded-md',
         ])}
-        onClick={onDisplayThemeDropdownButtonClick}
+        onClick={onDisplayColorDropdownButtonClick}
       >
         <section
-          data-testid={Testid.ChosenThemeDisplay}
+          data-testid={Testid.ChosenColorDisplay}
           className={classnames(['w-6', 'h-6', 'rounded-md', chosenBgColor])}
         />
         <section
@@ -80,7 +83,7 @@ function ColorSelect({ choice, options, onOptionClick }: Props) {
         </section>
       </button>
       <ul
-        data-testid={Testid.ThemeList}
+        data-testid={Testid.ColorList}
         className={classnames([
           'absolute',
           'top-full',
@@ -100,9 +103,10 @@ function ColorSelect({ choice, options, onOptionClick }: Props) {
         >
           {options.map((item, itemIdx, allItems) => (
             <button
+              data-testid={Testid.ColorButton}
               key={item.value}
               type="button"
-              aria-label="Select theme"
+              aria-label="Select color"
               className={classnames([
                 'w-6',
                 'h-6',
@@ -115,7 +119,7 @@ function ColorSelect({ choice, options, onOptionClick }: Props) {
                   : item.borderColor,
                 itemIdx !== allItems.length - 1 && 'mb-2',
               ])}
-              onClick={() => onThemeButtonClick(item.value)}
+              onClick={() => onColorButtonClick(item.value)}
             />
           ))}
         </li>
