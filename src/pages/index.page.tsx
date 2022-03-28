@@ -52,7 +52,7 @@ const Home: NextPage = function Home() {
   }, []);
 
   return (
-    <main className="relative w-screen h-screen bg-slate-100">
+    <main className="relative w-screen h-screen overflow-hidden bg-slate-100">
       <EllipseContainer top={-20} left={-10} bottom={null} right={null}>
         <BlurredEllipseIcon
           theme={theme}
