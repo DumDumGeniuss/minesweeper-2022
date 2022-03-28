@@ -1,12 +1,12 @@
-import { Palette } from '../types';
+import Palette from './types';
 
 const theme: Palette = {
   panel: {
     sidePanel: {
-      bgColor: 'bg-green-100',
+      bgColor: 'bg-amber-100',
     },
     resetButton: {
-      bgColorHover: 'hover:bg-green-100',
+      bgColorHover: 'hover:bg-amber-100',
     },
   },
   wrapper: {
@@ -15,33 +15,33 @@ const theme: Palette = {
   area: {
     unrevealedArea: {
       light: {
-        bgColor: 'bg-green-200',
-        bgColorHover: 'hover:bg-green-400',
+        bgColor: 'bg-amber-200',
+        bgColorHover: 'hover:bg-amber-400',
       },
       dark: {
-        bgColor: 'bg-green-300',
-        bgColorHover: 'hover:bg-green-500',
+        bgColor: 'bg-amber-300',
+        bgColorHover: 'hover:bg-amber-500',
       },
     },
     bombArea: {
       boomed: {
-        bgColor: 'bg-green-300',
+        bgColor: 'bg-amber-300',
       },
       notBoomed: {
         light: {
-          bgColor: 'bg-green-50',
+          bgColor: 'bg-amber-50',
         },
         dark: {
-          bgColor: 'bg-green-100',
+          bgColor: 'bg-amber-100',
         },
       },
     },
     safeArea: {
       light: {
-        bgColor: 'bg-green-50',
+        bgColor: 'bg-amber-50',
       },
       dark: {
-        bgColor: 'bg-green-100',
+        bgColor: 'bg-amber-100',
       },
     },
   },

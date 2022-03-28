@@ -1,12 +1,13 @@
 import type { NextPage } from 'next';
 import { useState, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import classnames from 'classnames';
-import MinesweeperBox, {
-  Theme,
-  convertStringToTheme,
-} from '@/components/MinesweeperBox';
+import { AppState } from '@/stores';
+import { setTheme } from '@/stores/theme';
+import { convertStringToTheme, Theme } from '@/styles/theme';
+import BigLogoIcon from '@/components/BigLogoIcon';
+import MinesweeperBox from '@/components/MinesweeperBox';
 import ThemeSelect from '@/components/ThemeSelect';
-import Svg from '@/components/Svg';
 
 const themeOptions = [
   {
@@ -74,50 +75,21 @@ const themeOptions = [
   },
 ];
 
-const convertThemeToLogoColor = (theme: Theme) => {
-  switch (theme) {
-    case Theme.Amber:
-      return 'text-amber-500';
-    case Theme.Emerald:
-      return 'text-emerald-500';
-    case Theme.Indigo:
-      return 'text-indigo-500';
-    case Theme.Gray:
-      return 'text-gray-500';
-    case Theme.Green:
-      return 'text-green-500';
-    case Theme.Purple:
-      return 'text-purple-500';
-    case Theme.Red:
-      return 'text-red-500';
-    case Theme.Sky:
-      return 'text-sky-500';
-    case Theme.Pink:
-      return 'text-pink-500';
-    default:
-      return 'text-sky-500';
-  }
-};
-
 const Home: NextPage = function Home() {
   const [size] = useState({ width: 20, height: 15 });
   const [minesCount] = useState(40);
-  const [theme, setTheme] = useState(Theme.Sky);
+  const {
+    theme: { theme },
+  } = useSelector<AppState, AppState>((state) => state);
+  const dispatch = useDispatch();
   const onThemeSelect = useCallback((value: string) => {
-    setTheme(convertStringToTheme(value));
+    dispatch(setTheme(convertStringToTheme(value)));
   }, []);
 
   return (
     <main className="relative w-screen h-screen bg-slate-100">
-      <section
-        className={classnames([
-          'absolute',
-          'top-4',
-          'left-4',
-          convertThemeToLogoColor(theme),
-        ])}
-      >
-        <Svg name="bigLogo" />
+      <section className={classnames(['absolute', 'top-4', 'left-4'])}>
+        <BigLogoIcon theme={theme} />
       </section>
       <section className="absolute top-4 right-4">
         <ThemeSelect

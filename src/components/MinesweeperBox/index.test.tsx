@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import MinesweeperBox, { Theme } from '.';
+import { Theme } from '@/styles/theme';
+import MinesweeperBox from '.';
 
 describe('MinesweeperBox', () => {
   it('Should render component successfully.', () => {

@@ -1,14 +1,11 @@
 import { memo } from 'react';
 import { Field, Status } from '@/lib/minesweeper';
 import useMinesweeper from '@/hooks/useMinesweeper';
+import { Theme } from '@/styles/theme';
 import WrapperComp from './Wrapper';
 import PanelComp, { Status as PanelStatus } from './Panel';
 import MinefieldComp, { Minefield } from './Minefield';
-import PaletteContext, {
-  paletteGroup,
-  Theme,
-  convertStringToTheme,
-} from './PaletteContext';
+import PaletteContext, { paletteGroup } from './PaletteContext';
 
 /**
  * Convert Status in minesweeper to PanelStatus used in Panel Component.
@@ -98,5 +95,3 @@ const MinesweeperBox = function MinesweeperBox({
 };
 
 export default MinesweeperBox;
-
-export { Theme, convertStringToTheme };

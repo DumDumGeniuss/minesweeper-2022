@@ -1,15 +1,3 @@
-enum Theme {
-  Sky = 'sky',
-  Purple = 'purple',
-  Amber = 'amber',
-  Red = 'red',
-  Green = 'green',
-  Emerald = 'emerald',
-  Indigo = 'indigo',
-  Gray = 'gray',
-  Pink = 'pink',
-}
-
 type Palette = {
   panel: {
     sidePanel: {
@@ -57,9 +45,4 @@ type Palette = {
   };
 };
 
-type PaletteGroup = {
-  [key in Theme]: Palette;
-};
-
-export { Theme };
-export type { Palette, PaletteGroup };
+export default Palette;

@@ -2,11 +2,11 @@ import { createWrapper } from 'next-redux-wrapper';
 import { Action } from 'redux';
 import { configureStore, ThunkAction } from '@reduxjs/toolkit';
 
-import mockupReducer from './mockup';
+import themeReducer from './theme';
 
-// Mockup reducer as an example for future use.
+// Theme reducer as an example for future use.
 export const reducer = {
-  mockup: mockupReducer,
+  theme: themeReducer,
 };
 
 export const makeStore = () =>
