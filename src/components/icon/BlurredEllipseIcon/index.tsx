@@ -37,7 +37,7 @@ type Props = {
   height: number;
 };
 
-function BlurredEllipse({ theme, opacity, width, height }: Props) {
+function BlurredEllipseIcon({ theme, opacity, width, height }: Props) {
   const color = convertThemeToEllipseColor(theme);
   return (
     <section
@@ -52,5 +52,5 @@ function BlurredEllipse({ theme, opacity, width, height }: Props) {
   );
 }
 
-export default BlurredEllipse;
+export default BlurredEllipseIcon;
 export { Testid, convertThemeToEllipseColor };

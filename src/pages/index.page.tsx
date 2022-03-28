@@ -5,10 +5,10 @@ import classnames from 'classnames';
 import { AppState } from '@/stores';
 import { setTheme } from '@/stores/theme';
 import { convertStringToTheme, Theme } from '@/styles/theme';
-import BigLogoIcon from '@/components/BigLogoIcon';
-import MinesweeperBox from '@/components/MinesweeperBox';
-import ThemeSelect from '@/components/ThemeSelect';
-import BlurredEllipse from '@/components/BlurredEllipse';
+import BigLogoIcon from '@/components/icon/BigLogoIcon';
+import MinesweeperBox from '@/components/box/MinesweeperBox';
+import ColorSelect from '@/components/select/ColorSelect';
+import BlurredEllipseIcon from '@/components/icon/BlurredEllipseIcon';
 
 const themeOptions = [
   {
@@ -113,32 +113,52 @@ const Home: NextPage = function Home() {
     theme: { theme },
   } = useSelector<AppState, AppState>((state) => state);
   const dispatch = useDispatch();
-  const onThemeSelect = useCallback((value: string) => {
+  const onColorSelect = useCallback((value: string) => {
     dispatch(setTheme(convertStringToTheme(value)));
   }, []);
 
   return (
     <main className="relative w-screen h-screen bg-slate-100">
       <EllipseContainer top={-20} left={-10} bottom={null} right={null}>
-        <BlurredEllipse theme={theme} opacity={0.4} width={27} height={40} />
+        <BlurredEllipseIcon
+          theme={theme}
+          opacity={0.4}
+          width={27}
+          height={40}
+        />
       </EllipseContainer>
       <EllipseContainer top={-5} left={10} bottom={null} right={null}>
-        <BlurredEllipse theme={theme} opacity={0.2} width={25} height={26} />
+        <BlurredEllipseIcon
+          theme={theme}
+          opacity={0.2}
+          width={25}
+          height={26}
+        />
       </EllipseContainer>
       <EllipseContainer top={null} left={null} bottom={-50} right={-30}>
-        <BlurredEllipse theme={theme} opacity={0.3} width={65} height={74} />
+        <BlurredEllipseIcon
+          theme={theme}
+          opacity={0.3}
+          width={65}
+          height={74}
+        />
       </EllipseContainer>
       <EllipseContainer top={null} left={null} bottom={20} right={-5}>
-        <BlurredEllipse theme={theme} opacity={0.2} width={24} height={16} />
+        <BlurredEllipseIcon
+          theme={theme}
+          opacity={0.2}
+          width={24}
+          height={16}
+        />
       </EllipseContainer>
       <section className={classnames(['absolute', 'top-4', 'left-4'])}>
         <BigLogoIcon theme={theme} />
       </section>
       <section className="absolute top-4 right-4 z-20">
-        <ThemeSelect
+        <ColorSelect
           choice={theme}
           options={themeOptions}
-          onOptionClick={onThemeSelect}
+          onOptionClick={onColorSelect}
         />
       </section>
       <section className="relative flex w-full h-full justify-center items-center z-10">

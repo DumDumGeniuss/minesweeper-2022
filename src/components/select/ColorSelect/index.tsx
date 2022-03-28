@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import classnames from 'classnames';
 import useClickOutside from '@/hooks/useClickOutside';
-import Svg from '@/components/Svg';
+import ArrowSvg from '@/components/svg/ArrowSvg';
 
 enum Testid {
   ChosenThemeDisplay = 'chosen-theme-color-display',
@@ -22,11 +22,7 @@ type Props = {
   onOptionClick: (value: string) => any;
 };
 
-const ThemeSelect = function ThemeSelect({
-  choice,
-  options,
-  onOptionClick,
-}: Props) {
+function ColorSelect({ choice, options, onOptionClick }: Props) {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const rootElementRef = useRef<HTMLElement>(null);
   const onClickOutside = () => {
@@ -80,7 +76,7 @@ const ThemeSelect = function ThemeSelect({
             isDropdownVisible && 'rotate-180',
           ])}
         >
-          <Svg name="arrow" />
+          <ArrowSvg />
         </section>
       </button>
       <ul
@@ -126,8 +122,8 @@ const ThemeSelect = function ThemeSelect({
       </ul>
     </section>
   );
-};
+}
 
-export default ThemeSelect;
+export default ColorSelect;
 export { Testid };
 export type { Options };

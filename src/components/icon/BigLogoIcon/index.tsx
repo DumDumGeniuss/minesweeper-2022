@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import { Theme } from '@/styles/theme';
-import Svg from '@/components/Svg';
+import BigLogoSvg from '@/components/svg/BigLogoSvg';
 
 enum Testid {
   Root = 'root',
@@ -41,7 +41,7 @@ function BigLogoIcon({ theme }: Props) {
       data-testid={Testid.Root}
       className={classnames(['inline-flex', convertThemeToLogoColor(theme)])}
     >
-      <Svg name="bigLogo" />
+      <BigLogoSvg />
     </section>
   );
 }

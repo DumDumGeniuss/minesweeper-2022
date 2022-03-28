@@ -1,13 +1,13 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import ThemeSelect, { Testid } from '.';
+import ColorSelect, { Testid } from '.';
 import type { Options } from '.';
 
-describe('ThemeSelect', () => {
+describe('ColorSelect', () => {
   it('Should render component successfully.', () => {
     try {
       const options: Options = [];
       render(
-        <ThemeSelect choice="red" options={options} onOptionClick={() => {}} />
+        <ColorSelect choice="red" options={options} onOptionClick={() => {}} />
       );
 
       expect(true).toBe(true);
@@ -26,7 +26,7 @@ describe('ThemeSelect', () => {
       },
     ];
     render(
-      <ThemeSelect choice="red" options={options} onOptionClick={() => {}} />
+      <ColorSelect choice="red" options={options} onOptionClick={() => {}} />
     );
     const chosenThemeDisplay = screen.getByTestId(Testid.ChosenThemeDisplay);
 
@@ -50,7 +50,7 @@ describe('ThemeSelect', () => {
       },
     ];
     const { container } = render(
-      <ThemeSelect choice="red" options={options} onOptionClick={() => {}} />
+      <ColorSelect choice="red" options={options} onOptionClick={() => {}} />
     );
     const themeOptions = container.querySelectorAll(
       '[aria-label="Select theme"]'
@@ -70,7 +70,7 @@ describe('ThemeSelect', () => {
       },
     ];
     const { container } = render(
-      <ThemeSelect choice="red" options={options} onOptionClick={() => {}} />
+      <ColorSelect choice="red" options={options} onOptionClick={() => {}} />
     );
     const displayThemeDropdownButton = container.querySelector(
       '[aria-label="Display theme dropdown"]'
@@ -100,7 +100,7 @@ describe('ThemeSelect', () => {
     ];
     const onOptionClick = jest.fn();
     const { container } = render(
-      <ThemeSelect
+      <ColorSelect
         choice="red"
         options={options}
         onOptionClick={onOptionClick}
