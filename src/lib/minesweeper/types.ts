@@ -3,7 +3,9 @@
  * @field hasMines boolean Does this area has a mine?
  * @field adjMinesCount number How many adjaent mines does this area has?
  * @field revealed boolean Has this area been revealed?
+ * @field boomed boolean Has someone revealed a mine and caused death?
  * @field boomed boolean Have you revealed this area when it has a mine?
+ * @field coord Coordinate Coordinate of this area.
  */
 export type Area = {
   hasMines: boolean;

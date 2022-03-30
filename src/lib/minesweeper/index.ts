@@ -57,7 +57,6 @@ class Minesweeper {
     if (this.size.width < 0 || this.size.height < 0) {
       throw getIncorrectSizeError();
     }
-
     if (this.minesCount >= this.size.width * this.size.height) {
       throw getTooManyMinesError();
     }
@@ -91,45 +90,42 @@ class Minesweeper {
     }
   }
 
+  private getAreaAdjMinesCount(c: Coordinate) {
+    const [x, y] = c;
+    return this.field[x][y].adjMinesCount;
+  }
+
   private isCoordinateOutsideField(c: Coordinate): boolean {
     const [x, y] = c;
     return x < 0 || x >= this.size.width || y < 0 || y >= this.size.height;
   }
 
+  private isGameEnded() {
+    return this.status === 'FAILED' || this.status === 'SUCCEEDED';
+  }
+
+  private isGameSleeping() {
+    return this.status === 'SLEEPING';
+  }
+
+  private isAreaHasMines(c: Coordinate): boolean {
+    const [x, y] = c;
+    return this.field[x][y].hasMines;
+  }
+
+  private isAreaRevealed(c: Coordinate): boolean {
+    const [x, y] = c;
+    return this.field[x][y].revealed;
+  }
+
+  private isAreaFlagged(c: Coordinate): boolean {
+    const [x, y] = c;
+    return this.field[x][y].flagged;
+  }
+
   private setDuration(duration: number) {
     this.duration = duration;
     this.emitDurationChangeEvents();
-  }
-
-  private startDurationCounter() {
-    this.counter = setInterval(() => {
-      this.setDuration(this.duration + 1);
-    }, 1000);
-  }
-
-  private stopDurationCounter() {
-    if (this.counter) {
-      clearInterval(this.counter);
-    }
-  }
-
-  private emitDurationChangeEvents() {
-    this.durationChangeListeners.forEach((sub) => {
-      sub(this.duration);
-    });
-  }
-
-  subscribe(e: EventType, callback: DurationChangeListener) {
-    if (e === EventType.DurationChange) {
-      this.durationChangeListeners.push(callback);
-    }
-  }
-
-  unsubscribe(e: EventType, callback: DurationChangeListener) {
-    if (e === EventType.DurationChange) {
-      const callbackIdx = this.durationChangeListeners.indexOf(callback);
-      this.durationChangeListeners.splice(callbackIdx, 1);
-    }
   }
 
   private setGameToStarted() {
@@ -150,6 +146,132 @@ class Minesweeper {
   private setGameToSleeping() {
     this.status = 'SLEEPING';
     this.stopDurationCounter();
+  }
+
+  private setAreaBoomedToTrue(c: Coordinate) {
+    const [x, y] = c;
+    this.field[x][y].boomed = true;
+  }
+
+  private setAreaFlaggedToTrue(c: Coordinate) {
+    const [x, y] = c;
+    this.field[x][y].flagged = true;
+    this.flagsCount += 1;
+  }
+
+  private setAreaFlaggedToFalse(c: Coordinate) {
+    const [x, y] = c;
+    this.field[x][y].flagged = false;
+    this.flagsCount -= 1;
+  }
+
+  private setAreaRevealedToTrue(c: Coordinate) {
+    const [x, y] = c;
+    this.field[x][y].revealed = true;
+    this.revealedAreaCount += 1;
+  }
+
+  private setAreaHasMinesToTrue(c: Coordinate) {
+    const [x, y] = c;
+    this.field[x][y].hasMines = true;
+  }
+
+  private setAllAreasToBeRevealed() {
+    this.iterateField((c: Coordinate) => this.setAreaRevealedToTrue(c));
+  }
+
+  private startDurationCounter() {
+    this.counter = setInterval(() => {
+      this.setDuration(this.duration + 1);
+    }, 1000);
+  }
+
+  private stopDurationCounter() {
+    if (this.counter) {
+      clearInterval(this.counter);
+    }
+  }
+
+  private emitDurationChangeEvents() {
+    this.durationChangeListeners.forEach((sub) => {
+      sub(this.duration);
+    });
+  }
+
+  private revealAreaWithMines(c: Coordinate) {
+    this.setAreaBoomedToTrue(c);
+    this.setAllAreasToBeRevealed();
+    this.setGameToFailed();
+  }
+
+  /**
+   * Reveal an area without mines, also recursively reveal all adjecent areas
+   * also without mines.
+   * @param c
+   */
+  private revealAreaWithoutMines(c: Coordinate) {
+    const visitedAreaMap: { [coordKey: string]: true } = {};
+    const minesToReveal: Coordinate[] = [];
+    minesToReveal.push(c);
+
+    while (minesToReveal.length > 0) {
+      // @ts-ignore Weird TS complaints, need to sort this out later.
+      const nextCoord: Coordinate = minesToReveal.pop();
+      const coordKey = `${nextCoord[0]},${nextCoord[1]}`;
+
+      const isTheAreaVisited = visitedAreaMap[coordKey];
+      if (!isTheAreaVisited) {
+        visitedAreaMap[coordKey] = true;
+
+        const hasMines = this.isAreaHasMines(nextCoord);
+        const flagged = this.isAreaFlagged(nextCoord);
+        const revealed = this.isAreaRevealed(nextCoord);
+        const adjMinesCount = this.getAreaAdjMinesCount(nextCoord);
+        const doNotRevealThisArea = hasMines || revealed || flagged;
+        if (!doNotRevealThisArea) {
+          this.setAreaRevealedToTrue(nextCoord);
+
+          const shallKeepTraversing = adjMinesCount === 0;
+          if (shallKeepTraversing) {
+            this.iterateAdjacentAreas(nextCoord, (adjAreaCoord: Coordinate) => {
+              minesToReveal.unshift(adjAreaCoord);
+            });
+          }
+        }
+      }
+    }
+
+    const isGameCompletedSuccessfully =
+      this.revealedAreaCount + this.minesCount ===
+      this.size.width * this.size.height;
+    if (isGameCompletedSuccessfully) {
+      this.setGameToSucceeded();
+      this.setAllAreasToBeRevealed();
+    }
+  }
+
+  private plantMineAtArea(c: Coordinate) {
+    this.setAreaHasMinesToTrue(c);
+    this.iterateAdjacentAreas(c, (adjAreaCoord: Coordinate) => {
+      const [adjAreaX, adjAreaY] = adjAreaCoord;
+      this.field[adjAreaX][adjAreaY].adjMinesCount += 1;
+    });
+  }
+
+  private randomlyPlantMinesOnField(coordToAvoid: Coordinate) {
+    let plantedMinesCount = 0;
+    const [coordToAvoidX, coordToAvoidY] = coordToAvoid;
+
+    while (plantedMinesCount < this.minesCount) {
+      const x: number = Math.floor(Math.random() * this.size.width);
+      const y: number = Math.floor(Math.random() * this.size.height);
+      const { hasMines, revealed } = this.field[x][y];
+      const isCoordToAvoid = x === coordToAvoidX && y === coordToAvoidY;
+      if (!isCoordToAvoid && !hasMines && !revealed) {
+        this.plantMineAtArea([x, y]);
+        plantedMinesCount += 1;
+      }
+    }
   }
 
   /**
@@ -194,51 +316,16 @@ class Minesweeper {
     };
   }
 
-  private revealAreaWithMines(c: Coordinate) {
-    this.setAreaBoomedToTrue(c);
-    this.setAllAreasToBeRevealed();
-    this.setGameToFailed();
+  subscribe(e: EventType, callback: DurationChangeListener) {
+    if (e === EventType.DurationChange) {
+      this.durationChangeListeners.push(callback);
+    }
   }
 
-  /**
-   * Reveal an area without mines, also recursively reveal all adjecent areas
-   * also without mines.
-   * @param c
-   */
-  private revealAreaWithoutMines(c: Coordinate) {
-    const visitedAreaMap: { [coordKey: string]: true } = {};
-    const minesToReveal: Coordinate[] = [];
-    minesToReveal.push(c);
-
-    while (minesToReveal.length > 0) {
-      // @ts-ignore Weird TS complaints, need to sort this out later.
-      const [x, y] = minesToReveal.pop();
-      const coordKey = `${x},${y}`;
-
-      const isTheAreaVisited = visitedAreaMap[coordKey];
-      if (!isTheAreaVisited) {
-        visitedAreaMap[coordKey] = true;
-
-        const { hasMines, revealed, flagged, adjMinesCount } = this.field[x][y];
-        const stopTraversingThisArea = hasMines || revealed || flagged;
-        if (!stopTraversingThisArea) {
-          this.setAreaRevealedToTrue([x, y]);
-
-          if (adjMinesCount === 0) {
-            this.iterateAdjacentAreas([x, y], (adjAreaCoord: Coordinate) => {
-              minesToReveal.unshift(adjAreaCoord);
-            });
-          }
-        }
-      }
-    }
-
-    const isGameCompletedSuccessfully =
-      this.revealedAreaCount + this.minesCount ===
-      this.size.width * this.size.height;
-    if (isGameCompletedSuccessfully) {
-      this.setGameToSucceeded();
-      this.setAllAreasToBeRevealed();
+  unsubscribe(e: EventType, callback: DurationChangeListener) {
+    if (e === EventType.DurationChange) {
+      const callbackIdx = this.durationChangeListeners.indexOf(callback);
+      this.durationChangeListeners.splice(callbackIdx, 1);
     }
   }
 
@@ -247,23 +334,22 @@ class Minesweeper {
    * @param c Coordinate
    */
   revealArea(c: Coordinate): Progress {
-    if (this.status === 'FAILED' || this.status === 'SUCCEEDED') {
+    if (this.isGameEnded()) {
       throw getGameHasEndedError();
     }
-    const [x, y] = c;
     if (this.isCoordinateOutsideField(c)) {
       throw getOutsideBorderError(c);
     }
-    if (this.field[x][y].revealed) {
+    if (this.isAreaRevealed(c)) {
       throw getHasBeenRevealedError(c);
     }
-    if (this.field[x][y].flagged) {
+    if (this.isAreaFlagged(c)) {
       throw getHasBeenFlaggedError(c);
     }
 
-    if (this.field[x][y].hasMines) {
+    if (this.isAreaHasMines(c)) {
       this.revealAreaWithMines(c);
-    } else if (this.status === 'SLEEPING') {
+    } else if (this.isGameSleeping()) {
       this.randomlyPlantMinesOnField(c);
       this.setGameToStarted();
       this.revealAreaWithoutMines(c);
@@ -279,17 +365,16 @@ class Minesweeper {
    * @param c Coordinate
    */
   flagArea(c: Coordinate): Progress {
-    if (this.status === 'FAILED' || this.status === 'SUCCEEDED') {
+    if (this.isGameEnded()) {
       throw getGameHasEndedError();
     }
-    const [x, y] = c;
     if (this.isCoordinateOutsideField(c)) {
       throw getOutsideBorderError(c);
     }
-    if (this.field[x][y].revealed) {
+    if (this.isAreaRevealed(c)) {
       throw getHasBeenRevealedError(c);
     }
-    if (this.field[x][y].flagged) {
+    if (this.isAreaFlagged(c)) {
       throw getHasBeenFlaggedError(c);
     }
 
@@ -303,79 +388,22 @@ class Minesweeper {
    * @param c Coordinate
    */
   unflagArea(c: Coordinate): Progress {
-    if (this.status === 'FAILED' || this.status === 'SUCCEEDED') {
+    if (this.isGameEnded()) {
       throw getGameHasEndedError();
     }
-    const [x, y] = c;
     if (this.isCoordinateOutsideField(c)) {
       throw getOutsideBorderError(c);
     }
-    if (this.field[x][y].revealed) {
+    if (this.isAreaRevealed(c)) {
       throw getHasBeenRevealedError(c);
     }
-    if (!this.field[x][y].flagged) {
+    if (!this.isAreaFlagged(c)) {
       throw getHasNotBeenFlaggedError(c);
     }
 
     this.setAreaFlaggedToFalse(c);
 
     return this.getProgress();
-  }
-
-  private plantMineAtArea(c: Coordinate) {
-    this.setAreaHasMinesToTrue(c);
-    this.iterateAdjacentAreas(c, (adjAreaCoord: Coordinate) => {
-      const [adjAreaX, adjAreaY] = adjAreaCoord;
-      this.field[adjAreaX][adjAreaY].adjMinesCount += 1;
-    });
-  }
-
-  private randomlyPlantMinesOnField(coordToAvoid: Coordinate) {
-    let plantedMinesCount = 0;
-    const [coordToAvoidX, coordToAvoidY] = coordToAvoid;
-
-    while (plantedMinesCount < this.minesCount) {
-      const x: number = Math.floor(Math.random() * this.size.width);
-      const y: number = Math.floor(Math.random() * this.size.height);
-      const { hasMines, revealed } = this.field[x][y];
-      const isCoordToAvoid = x === coordToAvoidX && y === coordToAvoidY;
-      if (!isCoordToAvoid && !hasMines && !revealed) {
-        this.plantMineAtArea([x, y]);
-        plantedMinesCount += 1;
-      }
-    }
-  }
-
-  private setAreaBoomedToTrue(c: Coordinate) {
-    const [x, y] = c;
-    this.field[x][y].boomed = true;
-  }
-
-  private setAreaFlaggedToTrue(c: Coordinate) {
-    const [x, y] = c;
-    this.field[x][y].flagged = true;
-    this.flagsCount += 1;
-  }
-
-  private setAreaFlaggedToFalse(c: Coordinate) {
-    const [x, y] = c;
-    this.field[x][y].flagged = false;
-    this.flagsCount -= 1;
-  }
-
-  private setAreaRevealedToTrue(c: Coordinate) {
-    const [x, y] = c;
-    this.field[x][y].revealed = true;
-    this.revealedAreaCount += 1;
-  }
-
-  private setAreaHasMinesToTrue(c: Coordinate) {
-    const [x, y] = c;
-    this.field[x][y].hasMines = true;
-  }
-
-  private setAllAreasToBeRevealed() {
-    this.iterateField((c: Coordinate) => this.setAreaRevealedToTrue(c));
   }
 
   destroy() {
