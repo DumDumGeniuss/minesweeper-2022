@@ -16,6 +16,16 @@ The app is deployed here:
 
 RWD is not yet supported, we will be working on it soon.
 
+## Design Principles
+
+### Write Clean Code
+
+[Clean Code Summary](https://gist.github.com/wojteklu/73c6914cc446146b8b533c0988cf8d29)
+
+### Conform to SOLID Principles
+
+[SOLID Principles](https://en.wikipedia.org/wiki/SOLID)
+
 ## Infrastructure
 
 We have two main modules that build the entire Minesweeper game:
