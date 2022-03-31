@@ -100,8 +100,15 @@ class Minesweeper {
     return x < 0 || x >= this.size.width || y < 0 || y >= this.size.height;
   }
 
-  private isGameEnded() {
+  private hasGameEnded() {
     return this.status === 'FAILED' || this.status === 'SUCCEEDED';
+  }
+
+  private areAllAreasWithoutMinesRevealed() {
+    return (
+      this.revealedAreaCount + this.minesCount ===
+      this.size.width * this.size.height
+    );
   }
 
   private isGameSleeping() {
@@ -123,66 +130,70 @@ class Minesweeper {
     return this.field[x][y].flagged;
   }
 
-  private setDuration(duration: number) {
+  private updateDurationAndEmitEvent(duration: number) {
     this.duration = duration;
     this.emitDurationChangeEvents();
   }
 
-  private setGameToStarted() {
+  private startGame() {
     this.status = 'STARTED';
     this.startDurationCounter();
   }
 
-  private setGameToFailed() {
+  private faileGame() {
     this.status = 'FAILED';
     this.stopDurationCounter();
   }
 
-  private setGameToSucceeded() {
+  private succeedGame() {
     this.status = 'SUCCEEDED';
     this.stopDurationCounter();
   }
 
-  private setGameToSleeping() {
+  private makeGameSleep() {
     this.status = 'SLEEPING';
     this.stopDurationCounter();
   }
 
-  private setAreaBoomedToTrue(c: Coordinate) {
+  private bombAreaWithMineAtCoordinate(c: Coordinate) {
     const [x, y] = c;
     this.field[x][y].boomed = true;
   }
 
-  private setAreaFlaggedToTrue(c: Coordinate) {
+  private putFlagAtCoordinate(c: Coordinate) {
     const [x, y] = c;
     this.field[x][y].flagged = true;
     this.flagsCount += 1;
   }
 
-  private setAreaFlaggedToFalse(c: Coordinate) {
+  private removeFlagAtCoordinate(c: Coordinate) {
     const [x, y] = c;
     this.field[x][y].flagged = false;
     this.flagsCount -= 1;
   }
 
-  private setAreaRevealedToTrue(c: Coordinate) {
+  private plantMineAtCoordinate(c: Coordinate) {
+    const [x, y] = c;
+    this.field[x][y].hasMines = true;
+    this.iterateAdjacentAreas(c, (adjAreaCoord: Coordinate) => {
+      const [adjAreaX, adjAreaY] = adjAreaCoord;
+      this.field[adjAreaX][adjAreaY].adjMinesCount += 1;
+    });
+  }
+
+  private revealAreaAtCoordiante(c: Coordinate) {
     const [x, y] = c;
     this.field[x][y].revealed = true;
     this.revealedAreaCount += 1;
   }
 
-  private setAreaHasMinesToTrue(c: Coordinate) {
-    const [x, y] = c;
-    this.field[x][y].hasMines = true;
-  }
-
-  private setAllAreasToBeRevealed() {
-    this.iterateField((c: Coordinate) => this.setAreaRevealedToTrue(c));
+  private revealAllAreasOnField() {
+    this.iterateField((c: Coordinate) => this.revealAreaAtCoordiante(c));
   }
 
   private startDurationCounter() {
     this.counter = setInterval(() => {
-      this.setDuration(this.duration + 1);
+      this.updateDurationAndEmitEvent(this.duration + 1);
     }, 1000);
   }
 
@@ -199,9 +210,9 @@ class Minesweeper {
   }
 
   private revealAreaWithMines(c: Coordinate) {
-    this.setAreaBoomedToTrue(c);
-    this.setAllAreasToBeRevealed();
-    this.setGameToFailed();
+    this.bombAreaWithMineAtCoordinate(c);
+    this.revealAllAreasOnField();
+    this.faileGame();
   }
 
   /**
@@ -229,7 +240,7 @@ class Minesweeper {
         const adjMinesCount = this.getAreaAdjMinesCount(nextCoord);
         const doNotRevealThisArea = hasMines || revealed || flagged;
         if (!doNotRevealThisArea) {
-          this.setAreaRevealedToTrue(nextCoord);
+          this.revealAreaAtCoordiante(nextCoord);
 
           const shallKeepTraversing = adjMinesCount === 0;
           if (shallKeepTraversing) {
@@ -241,21 +252,10 @@ class Minesweeper {
       }
     }
 
-    const isGameCompletedSuccessfully =
-      this.revealedAreaCount + this.minesCount ===
-      this.size.width * this.size.height;
-    if (isGameCompletedSuccessfully) {
-      this.setGameToSucceeded();
-      this.setAllAreasToBeRevealed();
+    if (this.areAllAreasWithoutMinesRevealed()) {
+      this.succeedGame();
+      this.revealAllAreasOnField();
     }
-  }
-
-  private plantMineAtArea(c: Coordinate) {
-    this.setAreaHasMinesToTrue(c);
-    this.iterateAdjacentAreas(c, (adjAreaCoord: Coordinate) => {
-      const [adjAreaX, adjAreaY] = adjAreaCoord;
-      this.field[adjAreaX][adjAreaY].adjMinesCount += 1;
-    });
   }
 
   private randomlyPlantMinesOnField(coordToAvoid: Coordinate) {
@@ -268,7 +268,7 @@ class Minesweeper {
       const { hasMines, revealed } = this.field[x][y];
       const isCoordToAvoid = x === coordToAvoidX && y === coordToAvoidY;
       if (!isCoordToAvoid && !hasMines && !revealed) {
-        this.plantMineAtArea([x, y]);
+        this.plantMineAtCoordinate([x, y]);
         plantedMinesCount += 1;
       }
     }
@@ -278,10 +278,10 @@ class Minesweeper {
    * Reset game.
    */
   reset(): Progress {
-    this.setDuration(0);
+    this.updateDurationAndEmitEvent(0);
     this.revealedAreaCount = 0;
     this.flagsCount = 0;
-    this.setGameToSleeping();
+    this.makeGameSleep();
 
     this.field = [];
     for (let x = 0; x < this.size.width; x += 1) {
@@ -334,7 +334,7 @@ class Minesweeper {
    * @param c Coordinate
    */
   revealArea(c: Coordinate): Progress {
-    if (this.isGameEnded()) {
+    if (this.hasGameEnded()) {
       throw getGameHasEndedError();
     }
     if (this.isCoordinateOutsideField(c)) {
@@ -349,11 +349,11 @@ class Minesweeper {
 
     if (this.isAreaHasMines(c)) {
       this.revealAreaWithMines(c);
-    } else if (this.isGameSleeping()) {
-      this.randomlyPlantMinesOnField(c);
-      this.setGameToStarted();
-      this.revealAreaWithoutMines(c);
     } else {
+      if (this.isGameSleeping()) {
+        this.randomlyPlantMinesOnField(c);
+        this.startGame();
+      }
       this.revealAreaWithoutMines(c);
     }
 
@@ -365,7 +365,7 @@ class Minesweeper {
    * @param c Coordinate
    */
   flagArea(c: Coordinate): Progress {
-    if (this.isGameEnded()) {
+    if (this.hasGameEnded()) {
       throw getGameHasEndedError();
     }
     if (this.isCoordinateOutsideField(c)) {
@@ -378,7 +378,7 @@ class Minesweeper {
       throw getHasBeenFlaggedError(c);
     }
 
-    this.setAreaFlaggedToTrue(c);
+    this.putFlagAtCoordinate(c);
 
     return this.getProgress();
   }
@@ -388,7 +388,7 @@ class Minesweeper {
    * @param c Coordinate
    */
   unflagArea(c: Coordinate): Progress {
-    if (this.isGameEnded()) {
+    if (this.hasGameEnded()) {
       throw getGameHasEndedError();
     }
     if (this.isCoordinateOutsideField(c)) {
@@ -401,7 +401,7 @@ class Minesweeper {
       throw getHasNotBeenFlaggedError(c);
     }
 
-    this.setAreaFlaggedToFalse(c);
+    this.removeFlagAtCoordinate(c);
 
     return this.getProgress();
   }
