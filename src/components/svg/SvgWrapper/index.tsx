@@ -1,7 +1,5 @@
-import { ReactNode } from 'react';
-
 type Props = {
-  children: ReactNode;
+  children: JSX.Element;
 };
 function SvgWrapper({ children }: Props) {
   return children;

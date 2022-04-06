@@ -1,8 +1,8 @@
-import Svg from '../SvgWrapper';
+import SvgWrapper from '../SvgWrapper';
 
 function BigLogoSvg() {
   return (
-    <Svg>
+    <SvgWrapper>
       <svg
         width="126"
         height="45"
@@ -55,7 +55,7 @@ function BigLogoSvg() {
           fill="currentColor"
         />
       </svg>
-    </Svg>
+    </SvgWrapper>
   );
 }
 
