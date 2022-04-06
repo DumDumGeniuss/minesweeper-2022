@@ -58,6 +58,25 @@ describe('Area', () => {
     );
     expect(screen.getByText('💣')).toBeInTheDocument();
   });
+  it('Should display border when an unrevealed area has revealed adjacent areas.', () => {
+    render(
+      <Area
+        x={1}
+        y={1}
+        revealed={false}
+        hasMines={false}
+        adjMinesCount={7}
+        boomed={false}
+        flagged={false}
+        checkIsAreaRevealed={() => true}
+        onClick={() => {}}
+        onContextMenu={() => {}}
+      />
+    );
+    expect(screen.getByTestId(Testid.UnrevealedAreaRoot).classList).toContain(
+      'border-l-2'
+    );
+  });
   it('Should display adjMinesCount when an area without mine is revealed.', () => {
     render(
       <Area

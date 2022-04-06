@@ -4,6 +4,7 @@ import PaletteContext from '../PaletteContext';
 
 enum Testid {
   SafeAreaWithFlag = 'safe-area-with-flag',
+  UnrevealedAreaRoot = 'unrevealed-area',
 }
 
 type UnrevealedAreaAreaProps = {
@@ -48,18 +49,16 @@ function UnrevealedArea({
   const darkBgColor = palette.area.unrevealedArea.dark.bgColor;
   const darkBgColorHover = palette.area.unrevealedArea.dark.bgColorHover;
 
-  const hideBorder =
-    hasBottomBorder && hasLeftBorder && hasRightBorder && hasTopBorder;
-
   return (
     <button
+      data-testid={Testid.UnrevealedAreaRoot}
       className={classnames([
         'flex',
         'justify-center',
         'items-center',
         'w-full',
         'h-full',
-        hideBorder ? 'border-transparent' : defaultBorderColor,
+        defaultBorderColor,
         hasLeftBorder && 'border-l-2',
         hasBottomBorder && 'border-b-2',
         hasRightBorder && 'border-r-2',
