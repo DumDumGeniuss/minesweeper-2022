@@ -11,6 +11,10 @@ type UnrevealedAreaAreaProps = {
   x: number;
   y: number;
   flagged: boolean;
+  hasLeftBorder: boolean;
+  hasBottomBorder: boolean;
+  hasRightBorder: boolean;
+  hasTopBorder: boolean;
   onClick: (x: number, y: number) => any;
   onContextMenu: (x: number, y: number) => any;
 };
@@ -20,6 +24,10 @@ function UnrevealedArea({
   y,
   mode,
   flagged,
+  hasLeftBorder,
+  hasBottomBorder,
+  hasRightBorder,
+  hasTopBorder,
   onClick,
   onContextMenu,
 }: UnrevealedAreaAreaProps) {
@@ -34,10 +42,15 @@ function UnrevealedArea({
     onContextMenu(x, y);
   };
   const palette = useContext(PaletteContext);
+  const defaultBorderColor = palette.area.unrevealedArea.borderColor;
   const lightBgColor = palette.area.unrevealedArea.light.bgColor;
   const lightBgColorHover = palette.area.unrevealedArea.light.bgColorHover;
   const darkBgColor = palette.area.unrevealedArea.dark.bgColor;
   const darkBgColorHover = palette.area.unrevealedArea.dark.bgColorHover;
+
+  const hideBorder =
+    hasBottomBorder && hasLeftBorder && hasRightBorder && hasTopBorder;
+
   return (
     <button
       className={classnames([
@@ -46,6 +59,11 @@ function UnrevealedArea({
         'items-center',
         'w-full',
         'h-full',
+        hideBorder ? 'border-transparent' : defaultBorderColor,
+        hasLeftBorder && 'border-l-2',
+        hasBottomBorder && 'border-b-2',
+        hasRightBorder && 'border-r-2',
+        hasTopBorder && 'border-t-2',
         mode === 'light' ? lightBgColor : darkBgColor,
         mode === 'light' ? lightBgColorHover : darkBgColorHover,
       ])}
@@ -158,6 +176,7 @@ type AreaProps = {
   adjMinesCount: number;
   boomed: boolean;
   flagged: boolean;
+  checkIsAreaRevealed: (x: number, y: number) => boolean;
   onClick: (x: number, y: number) => any;
   onContextMenu: (x: number, y: number) => any;
 };
@@ -170,6 +189,7 @@ function Area({
   hasMines,
   boomed,
   flagged,
+  checkIsAreaRevealed,
   onClick,
   onContextMenu,
 }: AreaProps) {
@@ -183,6 +203,10 @@ function Area({
         x={x}
         y={y}
         flagged={flagged}
+        hasLeftBorder={checkIsAreaRevealed(x - 1, y)}
+        hasBottomBorder={checkIsAreaRevealed(x, y + 1)}
+        hasRightBorder={checkIsAreaRevealed(x + 1, y)}
+        hasTopBorder={checkIsAreaRevealed(x, y - 1)}
         onClick={onClick}
         onContextMenu={onContextMenu}
       />
@@ -200,7 +224,9 @@ function Area({
   }
 
   return (
-    <section className="w-full h-full overflow-hidden">{AreaComponent}</section>
+    <section className={classnames(['w-full', 'h-full', 'overflow-hidden'])}>
+      {AreaComponent}
+    </section>
   );
 }
 

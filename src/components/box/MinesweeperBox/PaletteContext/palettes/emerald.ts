@@ -14,6 +14,7 @@ const theme: Palette = {
   },
   area: {
     unrevealedArea: {
+      borderColor: 'border-emerald-400',
       light: {
         bgColor: 'bg-emerald-200',
         bgColorHover: 'hover:bg-emerald-400',

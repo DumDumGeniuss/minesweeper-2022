@@ -1,8 +1,8 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import classnames from 'classnames';
-import Area from '../Area';
+import AreaComp from '../Area';
 
-const MemoArea = memo(Area);
+const MemoAreaComp = memo(AreaComp);
 
 export type Minefield = {
   x: number;
@@ -21,6 +21,15 @@ type Props = {
 };
 
 function Minefeild({ minefield, onAreaClick, onAreaContextMenu }: Props) {
+  const checkIsAreaRevealed = useCallback(
+    (x: number, y: number) => {
+      if (!minefield[x] || !minefield[x][y]) {
+        return false;
+      }
+      return minefield[x][y].revealed;
+    },
+    [minefield]
+  );
   const onContextMenu = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.preventDefault();
   };
@@ -44,7 +53,7 @@ function Minefeild({ minefield, onAreaClick, onAreaContextMenu }: Props) {
               key={`${area.x},${area.y}`}
               className={classnames(['w-8', 'h-8'])}
             >
-              <MemoArea
+              <MemoAreaComp
                 x={area.x}
                 y={area.y}
                 revealed={area.revealed}
@@ -52,6 +61,7 @@ function Minefeild({ minefield, onAreaClick, onAreaContextMenu }: Props) {
                 hasMines={area.hasMines}
                 boomed={area.boomed}
                 flagged={area.flagged}
+                checkIsAreaRevealed={checkIsAreaRevealed}
                 onClick={onAreaClick}
                 onContextMenu={onAreaContextMenu}
               />

@@ -12,6 +12,7 @@ type Palette = {
   };
   area: {
     unrevealedArea: {
+      borderColor: string;
       light: {
         bgColor: string;
         bgColorHover: string;

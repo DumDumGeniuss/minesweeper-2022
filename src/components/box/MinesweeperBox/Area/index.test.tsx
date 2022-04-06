@@ -13,6 +13,7 @@ describe('Area', () => {
           adjMinesCount={0}
           boomed={false}
           flagged={false}
+          checkIsAreaRevealed={() => false}
           onClick={() => {}}
           onContextMenu={() => {}}
         />
@@ -33,6 +34,7 @@ describe('Area', () => {
         adjMinesCount={0}
         boomed={false}
         flagged
+        checkIsAreaRevealed={() => false}
         onClick={() => {}}
         onContextMenu={() => {}}
       />
@@ -49,6 +51,7 @@ describe('Area', () => {
         adjMinesCount={0}
         boomed={false}
         flagged={false}
+        checkIsAreaRevealed={() => false}
         onClick={() => {}}
         onContextMenu={() => {}}
       />
@@ -65,6 +68,7 @@ describe('Area', () => {
         adjMinesCount={7}
         boomed={false}
         flagged={false}
+        checkIsAreaRevealed={() => false}
         onClick={() => {}}
         onContextMenu={() => {}}
       />
@@ -81,6 +85,7 @@ describe('Area', () => {
         adjMinesCount={7}
         boomed={false}
         flagged
+        checkIsAreaRevealed={() => false}
         onClick={() => {}}
         onContextMenu={() => {}}
       />
@@ -97,6 +102,7 @@ describe('Area', () => {
         adjMinesCount={3}
         boomed
         flagged={false}
+        checkIsAreaRevealed={() => false}
         onClick={() => {}}
         onContextMenu={() => {}}
       />
@@ -114,6 +120,7 @@ describe('Area', () => {
         adjMinesCount={3}
         boomed={false}
         flagged={false}
+        checkIsAreaRevealed={() => false}
         onClick={onClick}
         onContextMenu={() => {}}
       />
@@ -136,6 +143,7 @@ describe('Area', () => {
         adjMinesCount={3}
         boomed={false}
         flagged
+        checkIsAreaRevealed={() => false}
         onClick={onClick}
         onContextMenu={() => {}}
       />
@@ -158,6 +166,7 @@ describe('Area', () => {
         adjMinesCount={3}
         boomed={false}
         flagged
+        checkIsAreaRevealed={() => false}
         onClick={onClick}
         onContextMenu={() => {}}
       />
