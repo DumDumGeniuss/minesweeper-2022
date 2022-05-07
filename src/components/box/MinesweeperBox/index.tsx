@@ -46,6 +46,7 @@ function converFieldToMinefield(field: Field): Minefield {
 
 type Props = {
   size: { width: number; height: number };
+  areaSize: number;
   minesCount: number;
   theme: Theme;
 };
@@ -54,6 +55,7 @@ const MemoMinefieldComp = memo(MinefieldComp);
 
 const MinesweeperBox = function MinesweeperBox({
   size,
+  areaSize,
   minesCount,
   theme,
 }: Props) {
@@ -85,6 +87,7 @@ const MinesweeperBox = function MinesweeperBox({
         minefield={
           <MemoMinefieldComp
             minefield={minefield}
+            areaSize={areaSize}
             onAreaClick={onAreaClick}
             onAreaContextMenu={onAreaContextMenu}
           />

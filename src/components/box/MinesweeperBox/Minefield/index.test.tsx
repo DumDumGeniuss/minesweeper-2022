@@ -7,6 +7,7 @@ describe('Minefield', () => {
       render(
         <Minefeild
           minefield={[]}
+          areaSize={10}
           onAreaClick={() => {}}
           onAreaContextMenu={() => {}}
         />
@@ -43,6 +44,7 @@ describe('Minefield', () => {
     const { container } = render(
       <Minefeild
         minefield={minefield}
+        areaSize={10}
         onAreaClick={() => {}}
         onAreaContextMenu={() => {}}
       />

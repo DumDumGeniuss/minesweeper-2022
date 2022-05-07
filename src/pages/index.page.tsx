@@ -92,7 +92,12 @@ const Home: NextPage = function Home() {
         <ThemeSelect theme={theme} onSelect={onThemeSelect} />
       </section>
       <section className="relative flex w-full h-full justify-center items-center z-10">
-        <MinesweeperBox theme={theme} size={size} minesCount={minesCount} />
+        <MinesweeperBox
+          theme={theme}
+          size={size}
+          areaSize={32}
+          minesCount={minesCount}
+        />
       </section>
     </main>
   );

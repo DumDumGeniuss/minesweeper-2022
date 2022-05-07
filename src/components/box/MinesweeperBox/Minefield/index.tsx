@@ -16,11 +16,17 @@ export type Minefield = {
 
 type Props = {
   minefield: Minefield;
+  areaSize: number;
   onAreaClick: (x: number, y: number) => any;
   onAreaContextMenu: (x: number, y: number) => any;
 };
 
-function Minefeild({ minefield, onAreaClick, onAreaContextMenu }: Props) {
+function Minefeild({
+  minefield,
+  areaSize,
+  onAreaClick,
+  onAreaContextMenu,
+}: Props) {
   const checkIsAreaRevealed = useCallback(
     (x: number, y: number) => {
       if (!minefield[x] || !minefield[x][y]) {
@@ -51,7 +57,7 @@ function Minefeild({ minefield, onAreaClick, onAreaContextMenu }: Props) {
           {areas.map((area) => (
             <section
               key={`${area.x},${area.y}`}
-              className={classnames(['w-8', 'h-8'])}
+              style={{ width: areaSize, height: areaSize }}
             >
               <MemoAreaComp
                 x={area.x}
