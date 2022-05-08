@@ -73,7 +73,7 @@ export default function useMinesweeper(
     return () => {
       minesweeper.destroy();
     };
-  }, [size, minesCount]);
+  }, [size.width, size.height, minesCount]);
 
   return [
     minefield,

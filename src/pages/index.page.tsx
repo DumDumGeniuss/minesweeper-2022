@@ -1,7 +1,15 @@
 import type { NextPage } from 'next';
-import { useState, useCallback, ReactNode, useRef, useEffect } from 'react';
+import {
+  useState,
+  useCallback,
+  ReactNode,
+  useRef,
+  useEffect,
+  memo,
+} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import classnames from 'classnames';
+import debounce from 'lodash/debounce';
 import { AppState } from '@/stores';
 import { setTheme } from '@/stores/theme';
 import { convertStringToTheme } from '@/styles/theme';
@@ -42,8 +50,10 @@ function EllipseContainer({
   );
 }
 
+const MinesweeperBoxMemo = memo(MinesweeperBox);
+
 const Home: NextPage = function Home() {
-  const [size, seSize] = useState({ width: 0, height: 0 });
+  const [size, setSize] = useState({ width: 0, height: 0 });
   const [minesCount] = useState(40);
 
   const {
@@ -67,8 +77,9 @@ const Home: NextPage = function Home() {
     gameAreaSize
   );
 
+  const debounceSetSize = debounce(setSize, 300);
   useEffect(() => {
-    seSize({
+    debounceSetSize({
       width: gameWidth > 20 ? 20 : gameWidth,
       height: gameHeight > 15 ? 15 : gameHeight,
     });
@@ -122,7 +133,7 @@ const Home: NextPage = function Home() {
         className="relative flex-grow flex overflow-hidden justify-center items-center z-10"
       >
         {displayGame && (
-          <MinesweeperBox
+          <MinesweeperBoxMemo
             theme={theme}
             size={size}
             areaSize={gameAreaSize}
