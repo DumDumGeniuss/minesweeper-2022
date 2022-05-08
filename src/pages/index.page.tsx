@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { useState, useCallback, ReactNode } from 'react';
+import { useState, useCallback, ReactNode, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import classnames from 'classnames';
 import { AppState } from '@/stores';
@@ -9,6 +9,8 @@ import BigLogoIcon from '@/components/icon/BigLogoIcon';
 import MinesweeperBox from '@/components/box/MinesweeperBox';
 import ThemeSelect from '@/components/select/ThemeSelect';
 import BlurredEllipseIcon from '@/components/icon/BlurredEllipseIcon';
+import useDomRect from '@/hooks/useDomRect';
+import useResolutionCalculator from '@/hooks/useResolutionCalculator';
 
 type EllipseContainerProps = {
   top: number | null;
@@ -41,18 +43,41 @@ function EllipseContainer({
 }
 
 const Home: NextPage = function Home() {
-  const [size] = useState({ width: 20, height: 15 });
+  const [size, seSize] = useState({ width: 0, height: 0 });
   const [minesCount] = useState(40);
+
   const {
     theme: { theme },
   } = useSelector<AppState, AppState>((state) => state);
   const dispatch = useDispatch();
+
   const onThemeSelect = useCallback((value: string) => {
     dispatch(setTheme(convertStringToTheme(value)));
   }, []);
 
+  const gameAreaSize = 32;
+
+  const gameWrapperRef = useRef<HTMLElement>(null);
+  const gameWrapperRect = useDomRect(gameWrapperRef);
+  const [gameWidth, gameHeight] = useResolutionCalculator(
+    {
+      width: gameWrapperRect.width - 60,
+      height: gameWrapperRect.height - 110,
+    },
+    gameAreaSize
+  );
+
+  useEffect(() => {
+    seSize({
+      width: gameWidth > 20 ? 20 : gameWidth,
+      height: gameHeight > 15 ? 15 : gameHeight,
+    });
+  }, [gameWidth, gameHeight]);
+
+  const displayGame = size.width > 0 && size.height > 0;
+
   return (
-    <main className="relative w-screen h-screen overflow-hidden bg-slate-100">
+    <main className="relative w-screen h-screen flex flex-col overflow-hidden bg-slate-100">
       <EllipseContainer top={-20} left={-10} bottom={null} right={null}>
         <BlurredEllipseIcon
           theme={theme}
@@ -91,13 +116,19 @@ const Home: NextPage = function Home() {
       <section className="absolute top-4 right-4 z-20">
         <ThemeSelect theme={theme} onSelect={onThemeSelect} />
       </section>
-      <section className="relative flex w-full h-full justify-center items-center z-10">
-        <MinesweeperBox
-          theme={theme}
-          size={size}
-          areaSize={32}
-          minesCount={minesCount}
-        />
+      <section className="flex-shrink-0 h-20" />
+      <section
+        ref={gameWrapperRef}
+        className="relative flex-grow flex overflow-hidden justify-center items-center z-10"
+      >
+        {displayGame && (
+          <MinesweeperBox
+            theme={theme}
+            size={size}
+            areaSize={gameAreaSize}
+            minesCount={minesCount}
+          />
+        )}
       </section>
     </main>
   );

@@ -12,16 +12,16 @@ function Wrapper({ panel, minefield }: Props) {
   return (
     <section
       className={classnames([
-        'inline-flex',
+        'flex',
         'p-4',
         'rounded-xl',
         'shadow-xl',
         palette.wrapper.bgColor,
       ])}
     >
-      <section className="inline-flex flex-col">
-        <section className="flex-grow">{panel}</section>
-        <section className="mt-2">{minefield}</section>
+      <section className="flex flex-col">
+        <section>{panel}</section>
+        <section className="flex-grow mt-2">{minefield}</section>
       </section>
     </section>
   );
