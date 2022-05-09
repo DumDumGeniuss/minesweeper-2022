@@ -54,7 +54,10 @@ const MinesweeperBoxMemo = memo(MinesweeperBox);
 
 const Home: NextPage = function Home() {
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const [minesCount] = useState(40);
+  const debounceSetSize = debounce(setSize, 300);
+
+  const [minesCount, setMinesCount] = useState(40);
+  const debounceSetMinesCount = debounce(setMinesCount, 300);
 
   const {
     theme: { theme },
@@ -77,12 +80,21 @@ const Home: NextPage = function Home() {
     gameAreaSize
   );
 
-  const debounceSetSize = debounce(setSize, 300);
   useEffect(() => {
+    const width = gameWidth > 20 ? 20 : gameWidth;
+    const height = gameHeight > 15 ? 15 : gameHeight;
+    const area = width * height;
+
     debounceSetSize({
-      width: gameWidth > 20 ? 20 : gameWidth,
-      height: gameHeight > 15 ? 15 : gameHeight,
+      width,
+      height,
     });
+
+    if (area >= 300) {
+      debounceSetMinesCount(40);
+    } else {
+      debounceSetMinesCount(Math.ceil(area / 7));
+    }
   }, [gameWidth, gameHeight]);
 
   const displayGame = size.width > 0 && size.height > 0;
