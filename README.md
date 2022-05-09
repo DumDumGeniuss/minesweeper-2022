@@ -2,7 +2,7 @@
 
 Minesweeper 2022 is a minesweeper game built in 2022, ummm... yeah, literally.
 
-This repository is initialized with [dumdum-next-boilerplate-2022](https://github.com/DumDumGeniuss/dumdum-next-boilerplate-2022).
+This repository is initialized with this boilerplate [dumdum-next-boilerplate-2022](https://github.com/DumDumGeniuss/dumdum-next-boilerplate-2022).
 
 ![Vercel](https://vercelbadge.vercel.app/api/DumDumGeniuss/dumdum-next-boilerplate-2022)
 
